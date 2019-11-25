@@ -12,6 +12,6 @@ namespace Back.Models
         public string User { get; set; }
         public string eMail { get; set; }
         public string Password { get; set; }
-
+        public int LlaveSDES { get; set;}
     }
 }

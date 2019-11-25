@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Back.Models;
+using Back.Data;
 using Newtonsoft.Json;
 namespace Front.Controllers
 {
     public class MainController : Controller
     {
-        // GET: Main
         public ActionResult CrearUsuario()
         {
             return View();
@@ -28,18 +28,26 @@ namespace Front.Controllers
                     User= collection["User"],
                     Password = collection["Password"]
                 };
-                var json = JsonConvert.SerializeObject(Nuevo);
+                foreach (var item in Nuevo.User)
+                {
+                    Nuevo.LlaveSDES += (int)item;
+                }
                 //Cifrar Contraseña
-                return RedirectToAction("Index");
+                if (Nuevo.LlaveSDES < 512)
+                {
+                    Nuevo.LlaveSDES += 512;
+                }
+                Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES, Nuevo.Password);
+                var json = JsonConvert.SerializeObject(Nuevo);
+                //enviar a api y generar token
+
+                return RedirectToAction("");
             }
             catch
             {
                 return View();
             }
         }
-
-
-
         public ActionResult Login()
         {
             return View();
@@ -52,20 +60,30 @@ namespace Front.Controllers
                 // TODO: Add insert logic here
                 var Nuevo = new Usuario
                 {
-                    Nombre = collection["Nombre"],
-                    Apellido = collection["Apellido"],
-                    eMail = collection["eMail"],
                     User = collection["User"],
                     Password = collection["Password"]
                 };
-                var json = JsonConvert.SerializeObject(Nuevo);
                 //Cifrar Contraseña
-                return RedirectToAction("Index");
+                
+                foreach (var item in Nuevo.User)
+                {
+                    Nuevo.LlaveSDES+= (int)item;
+                }
+                if (Nuevo.LlaveSDES < 512)
+                {
+                    Nuevo.LlaveSDES += 512;
+                }
+                Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES,Nuevo.Password);
+                var json = JsonConvert.SerializeObject(Nuevo);
+                //Enviar Api y generar Token
+                return RedirectToAction("");
             }
             catch
             {
                 return View();
             }
         }
+
+
     }
 }
