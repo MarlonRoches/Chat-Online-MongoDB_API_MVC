@@ -85,6 +85,7 @@ namespace Back.Controllers
                     ModificarUsuairo.Id = modelo.Id;
                     ModificarUsuairo.Contactos = modelo.Contactos;
                     _usuario.Update(modelo.Id, ModificarUsuairo);
+               
                     return NoContent();
                 }
                 else
@@ -115,6 +116,7 @@ namespace Back.Controllers
                 ModificarUsuairo.Password = modelo.Password;
                 ModificarUsuairo.LlaveSDES = modelo.LlaveSDES;
                 _usuario.Update(modelo.Id, ModificarUsuairo);
+
                 return NoContent();
             }
             else
