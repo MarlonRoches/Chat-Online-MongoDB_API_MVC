@@ -21,6 +21,19 @@ namespace Back.Controllers
         [HttpGet]
         public ActionResult<List<Usuario>> Get() =>
             _usuario.Get();
+        [HttpGet ("{user}")]
+        public ActionResult<Usuario> GetId(string user)
+        {
+            var modelo = _usuario.Get(user);
+            if(modelo!= null)
+            {
+                return modelo;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
         [HttpPost]
         [Route("Login/{user}")]
@@ -29,7 +42,14 @@ namespace Back.Controllers
                 var modelo = _usuario.Get(user);
             if (modelo != null)
             {
-                return Ok(modelo);
+                if (modelo.Password == password.Password)
+                {
+                    return Ok(modelo);
+                }
+                else
+                {
+                    return BadRequest("Contraseña incorrecta");
+                }
             }
             else
             {
@@ -54,13 +74,46 @@ namespace Back.Controllers
         }
 
         [HttpPut("{user}")]
+        [Route("ModificarUsuario")]
         public IActionResult ModificarInformacion(string user, [FromBody] Usuario ModificarUsuairo)
+        {
+            var modelo = _usuario.Get(user);
+            if (modelo != null)
+            {
+                if (modelo.User == ModificarUsuairo.User)
+                {
+                    ModificarUsuairo.Id = modelo.Id;
+                    ModificarUsuairo.Contactos = modelo.Contactos;
+                    _usuario.Update(modelo.Id, ModificarUsuairo);
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound("Usuario no encontrado");
+            }
+
+
+
+        }
+        [HttpPut("{user}")]
+        [Route("ModificarContactos")]
+        public IActionResult ModificarContactos(string user, [FromBody] Usuario ModificarUsuairo)
         {
             var modelo = _usuario.Get(user);
             if (modelo != null)
             {
 
                 ModificarUsuairo.Id = modelo.Id;
+                ModificarUsuairo.Apellido = modelo.Apellido;
+                ModificarUsuairo.eMail = modelo.eMail;
+                ModificarUsuairo.Nombre = modelo.Nombre;
+                ModificarUsuairo.Password = modelo.Password;
+                ModificarUsuairo.LlaveSDES = modelo.LlaveSDES;
                 _usuario.Update(modelo.Id, ModificarUsuairo);
                 return NoContent();
             }
