@@ -27,12 +27,13 @@ namespace Front.Controllers
                 var Nuevo = new Usuario
                 {
                     Nombre = collection["Nombre"],
-                    Apellido= collection["Apellido"],
-                    eMail= collection["eMail"],
-                    User= collection["User"],
-                    Password = collection["Password"]
+                    Apellido = collection["Apellido"],
+                    Password = collection["Password"],
+                    NombreUsuario = collection["User"],
+                    CorreoElectronico = collection["eMail"],
+                    Contactos = new List<string>()
                 };
-                foreach (var item in Nuevo.User)
+                foreach (var item in Nuevo.NombreUsuario)
                 {
                     Nuevo.LlaveSDES += (int)item;
                 }
@@ -63,12 +64,12 @@ namespace Front.Controllers
                 // TODO: Add insert logic here
                 var Nuevo = new Usuario
                 {
-                    User = collection["User"],
+                    NombreUsuario = collection["User"],
                     Password = collection["Password"]
                 };
                 //Cifrar Contraseña
                 
-                foreach (var item in Nuevo.User)
+                foreach (var item in Nuevo.NombreUsuario)
                 {
                     Nuevo.LlaveSDES+= (int)item;
                 }
@@ -78,9 +79,9 @@ namespace Front.Controllers
                 }
                 Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES,Nuevo.Password);
                 var json = JsonConvert.SerializeObject(Nuevo);
-                var enviar = Nuevo.User+"/"+Nuevo.Password;
+                var enviar = Nuevo.NombreUsuario+"/"+Nuevo.Password;
             //Generar Token
-            UsuarioActual= 
+            //UsuarioActual= 
             //Verificar Que los campos sean correctos
             
             return RedirectToAction("ListaDeChats");

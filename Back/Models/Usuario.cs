@@ -16,6 +16,7 @@ namespace Back.Models
         public string Password { get; set; }
         public string NombreUsuario { get; set; }
         public string CorreoElectronico { get; set; }
+        public int LlaveSDES { get; set; }
         public List<string> Contactos { get; set; }
 
     }

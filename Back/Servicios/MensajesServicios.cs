@@ -20,7 +20,7 @@ namespace Back.Servicios
             _Mensajes.Find(_men => true).ToList();
 
         public Mensaje Get(string id) =>
-            _Mensajes.Find<Mensaje>(_men => _men.Id == id).FirstOrDefault();
+            _Mensajes.Find<Mensaje>(_men => _men.IDEmisorReceptor == id).FirstOrDefault();
 
         public Mensaje Create(Mensaje _men)
         {
