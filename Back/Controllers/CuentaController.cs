@@ -57,17 +57,6 @@ namespace Back.Controllers
             if (modelo != null)
             {
 
-                //if (ModificarUsuairo.Apellido == "") { ModificarUsuairo.Apellido = modelo.Apellido; }
-                //if (ModificarUsuairo.Nombre == "") { ModificarUsuairo.Nombre = modelo.Nombre; }
-                //if(ModificarUsuairo.Password == "") { ModificarUsuairo.Password = modelo.Password; }
-                //if(ModificarUsuairo.NombreUsuario == "") 
-                //{
-                //    ModificarUsuairo.NombreUsuario = modelo.NombreUsuario;
-                //}
-                //else
-                //{
-
-                //}
                 ModificarUsuairo.Id = modelo.Id;
                 _usuario.Update(modelo.Id, ModificarUsuairo);
                 return NoContent();
