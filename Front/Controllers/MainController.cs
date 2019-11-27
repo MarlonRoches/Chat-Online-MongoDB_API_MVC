@@ -85,7 +85,7 @@ namespace Front.Controllers
             //UsuarioActual= 
             //Verificar Que los campos sean correctos
             var cliente = new HttpClient();
-            var respose = await cliente.PostAsync("../api/Cuenta/", new StringContent(json, Encoding.UTF8, "application/json"));
+            var respose = await cliente.GetAsync("../api/Cuenta/"+enviar);
 
             UsuarioActual = Nuevo.User;
             return View("ListaDeChats");

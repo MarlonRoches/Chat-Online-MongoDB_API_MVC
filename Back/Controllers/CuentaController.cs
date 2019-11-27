@@ -22,8 +22,9 @@ namespace Back.Controllers
         public ActionResult<List<Usuario>> Get() =>
             _usuario.Get();
 
-        [HttpGet("{user}")]
-        public ActionResult<string> GetUsuario(string user)
+        [HttpGet("{user}/{password}")]
+        
+        public ActionResult<string> GetUsuario(string user,string password)
         {
             var modelo = _usuario.Get(user);
             if (modelo != null)
