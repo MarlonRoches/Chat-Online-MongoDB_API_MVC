@@ -92,23 +92,29 @@ namespace Front.Controllers
             var respose = await cliente.PostAsync(uri, content);
 
             UsuarioActual = Nuevo.User;
-            return ListaDeChats(new List<ListaContactos>());
+
+            var nuevo = new ListaContactos
+            {
+                Contacto = "1"
+            };
+            ContactosActual.Add(nuevo);
+            return RedirectToAction("ListaDeChats");
         }
-        public ActionResult ListaDeChats(List<ListaContactos> Lista)
+        public ActionResult ListaDeChats()
         {
             //enviar usuario para obtener lista
 
             //obtener lista de mensajes
             //Clasificar
             //var lista = new List<ListaContactos>();
-            
+
             //lista.Add(");
             //lista.Add("Jorge");
             //lista.Add("Estuardo");
             //lista.Add("Pablo");
-
+           
             //Devolver
-            return View(Lista);
+            return View(ContactosActual);
         }
        
     }

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-
+using Front.Models;
 namespace Back.Data
 {
     public class Singleton
@@ -14,6 +15,10 @@ namespace Back.Data
                 return _instance;
             }
         }
+
+        List<ListaContactos> ContactosActual = new List<ListaContactos>();
+
+
 
         public string CifradoSDES(int LlaveDelUsuario, string Contraseña)
         {
