@@ -57,6 +57,7 @@ namespace Back.Controllers
             }
 
         }
+
         [HttpPost]
         [Route("Crear")]
         public ActionResult<Usuario> Create([FromBody] Usuario nuevo)
@@ -100,6 +101,7 @@ namespace Back.Controllers
 
 
         }
+
         [HttpPut("{user}")]
         [Route("ModificarContactos")]
         public IActionResult ModificarContactos(string user, [FromBody] Usuario ModificarUsuairo)
@@ -125,6 +127,7 @@ namespace Back.Controllers
 
 
         }
+
         [HttpDelete("{user}")]
         public IActionResult Delete(string user)
         {

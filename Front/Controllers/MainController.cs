@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Front.Models;
+using Back.Models;
 
 namespace Front.Controllers
 {
@@ -91,14 +92,29 @@ namespace Front.Controllers
             var uri = "https://localhost:44338/api/Cuenta/Login/" + Nuevo.User;
             var respose = await cliente.PostAsync(uri, content);
 
-            UsuarioActual = Nuevo.User;
-
-            var nuevo = new ListaContactos
+            if (respose.ReasonPhrase == "OK")
             {
-                Contacto = "1"
-            };
-            ContactosActual.Add(nuevo);
-            return RedirectToAction("ListaDeChats");
+
+                UsuarioActual = Nuevo.User;
+
+                var nuevo = new ListaContactos
+                {
+                    Contacto = "1"
+                };
+                return RedirectToAction("ListaDeChats");
+            }
+            else if (respose.ReasonPhrase == "Bad Request")
+            {
+
+            return View();
+            }
+            else
+            {
+                //not Found
+            return View();
+
+            }
+            
         }
         public ActionResult ListaDeChats()
         {
@@ -114,7 +130,7 @@ namespace Front.Controllers
             //lista.Add("Pablo");
            
             //Devolver
-            return View(ContactosActual);
+            return View(new List<ListaContactos>());
         }
        
     }
