@@ -6,10 +6,14 @@ using System.Web.Mvc;
 using Back.Models;
 using Back.Data;
 using Newtonsoft.Json;
+using System.Net.Http;
+
 namespace Front.Controllers
 {
     public class MainController : Controller
     {
+        static string UsuarioActual="";
+        HttpClient ClienteHttp = new HttpClient();
         public ActionResult CrearUsuario()
         {
             return View();
@@ -53,10 +57,9 @@ namespace Front.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Login(FormCollection collection)
+        public async System.Threading.Tasks.Task<ActionResult> Login(FormCollection collection)
         {
-            try
-            {
+           
                 // TODO: Add insert logic here
                 var Nuevo = new Usuario
                 {
@@ -75,15 +78,29 @@ namespace Front.Controllers
                 }
                 Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES,Nuevo.Password);
                 var json = JsonConvert.SerializeObject(Nuevo);
-                //Enviar Api y generar Token
-                return RedirectToAction("");
-            }
-            catch
-            {
-                return View();
-            }
+                var enviar = Nuevo.User+"/"+Nuevo.Password;
+            //Generar Token
+            UsuarioActual= 
+            //Verificar Que los campos sean correctos
+            
+            return RedirectToAction("ListaDeChats");
         }
+        public ActionResult ListaDeChats()
+        {
+            //enviar usuario para obtener lista
 
+            //obtener lista de mensajes
+            //Clasificar
+            var lista = new List<string>();
+            
+            lista.Add("Pedro");
+            lista.Add("Jorge");
+            lista.Add("Estuardo");
+            lista.Add("Pablo");
 
+            //Devolver
+            return View(lista);
+        }
+       
     }
 }

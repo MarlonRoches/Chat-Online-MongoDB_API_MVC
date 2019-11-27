@@ -29,7 +29,23 @@ namespace Back.Controllers
         public void Post([FromBody] string value)
         {
         }
+        [HttpPost]
+        [ActionName("Simple")]
+        [Route("api/updates/simple")]
+        public string PostSimple([FromBody] string value)
+        {
+            if (value != null)
+            {
 
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
         // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
