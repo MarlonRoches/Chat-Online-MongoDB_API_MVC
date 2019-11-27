@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Back.Models;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Back.Models;
-using MongoDB.Driver;
 
 namespace Back.Servicios
 {

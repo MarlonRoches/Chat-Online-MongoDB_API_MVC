@@ -1,8 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Back.Models
 {
@@ -13,10 +9,11 @@ namespace Back.Models
         public string Id { get; set; }
 
         [BsonElement("Usuario")]
-    
+
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Password { get; set; }
+        public string NombreUsuario { get; set; }
 
     }
 }
