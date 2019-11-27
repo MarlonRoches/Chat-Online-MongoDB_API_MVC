@@ -8,6 +8,7 @@ using Back.Data;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
+using Front.Models;
 
 namespace Front.Controllers
 {
@@ -91,23 +92,23 @@ namespace Front.Controllers
             var respose = await cliente.PostAsync(uri, content);
 
             UsuarioActual = Nuevo.User;
-            return View("ListaDeChats");
+            return ListaDeChats(new List<ListaContactos>());
         }
-        public ActionResult ListaDeChats()
+        public ActionResult ListaDeChats(List<ListaContactos> Lista)
         {
             //enviar usuario para obtener lista
 
             //obtener lista de mensajes
             //Clasificar
-            var lista = new List<string>();
+            //var lista = new List<ListaContactos>();
             
-            lista.Add("Pedro");
-            lista.Add("Jorge");
-            lista.Add("Estuardo");
-            lista.Add("Pablo");
+            //lista.Add(");
+            //lista.Add("Jorge");
+            //lista.Add("Estuardo");
+            //lista.Add("Pablo");
 
             //Devolver
-            return View(lista);
+            return View(Lista);
         }
        
     }
