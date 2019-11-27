@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Back.Models;
+using Back.Servicios;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Back.Models;
-using Back.Servicios;
 
 namespace Back
 {
@@ -35,10 +29,7 @@ namespace Back
             services.Configure<MensajesDatabaseSettings>(Configuration.GetSection(nameof(MensajesDatabaseSettings)));
             services.AddSingleton<IMensajesDatabaseSettings>(sp => sp.GetRequiredService<IOptions<MensajesDatabaseSettings>>().Value);
             services.AddSingleton<MensajesServicios>();
-            //Chat
-            services.Configure<ChatsDatabaseSettings>(Configuration.GetSection(nameof(ChatsDatabaseSettings)));
-            services.AddSingleton<IChatsDatabaseSettings>(sp => sp.GetRequiredService<IOptions<ChatsDatabaseSettings>>().Value);
-            services.AddSingleton<ChatsServicios>();
+          
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

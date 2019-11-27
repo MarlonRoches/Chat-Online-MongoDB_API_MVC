@@ -1,8 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Back.Models
 {
@@ -13,11 +10,16 @@ namespace Back.Models
         public string Id { get; set; }
 
         [BsonElement("Usuario")]
-    
+
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Password { get; set; }
         public string NombreUsuario { get; set; }
+<<<<<<< HEAD
+=======
+        public string CorreoElectronico { get; set; }
+        public List<string> Contactos { get; set; }
+>>>>>>> 92490af11df318f49c2714361f1e421e913a4f23
 
     }
 }
