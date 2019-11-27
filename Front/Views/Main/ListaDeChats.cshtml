@@ -9,7 +9,7 @@
     @foreach (var item in Model.Contactos)
     {
     <li>
-@item
+        @item : @Html.ActionLink("Modificar Datos", "Modificar");
     </li>
     }
 </ul>
