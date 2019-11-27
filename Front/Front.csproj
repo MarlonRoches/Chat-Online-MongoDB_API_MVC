@@ -252,6 +252,7 @@
     <Content Include="Views\Main\CrearUsuario.cshtml" />
     <Content Include="Views\Main\Prueba.cshtml" />
     <Content Include="Views\Main\ListaDeChats.cshtml" />
+    <Content Include="Views\Main\Modificar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

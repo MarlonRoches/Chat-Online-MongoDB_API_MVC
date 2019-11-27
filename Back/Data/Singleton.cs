@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-
+using Front.Models;
+using Back.Models;
 namespace Back.Data
 {
     public class Singleton
@@ -15,6 +17,10 @@ namespace Back.Data
             }
         }
 
+        List<ListaContactos> ContactosActual = new List<ListaContactos>();
+        
+        public  string UsuarioActual = "";
+        public Usuario Actual = new Usuario();
         public string CifradoSDES(int LlaveDelUsuario, string Contraseña)
         {
             #region VariablesGlobales
@@ -284,7 +290,7 @@ namespace Back.Data
             }
         }
 
-
+        
 
         public string DesifradoSDES(string Contraseña)
         {

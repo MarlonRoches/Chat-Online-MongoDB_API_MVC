@@ -9,13 +9,15 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Front.Models;
+using Back.Data;
 
 namespace Front.Controllers
 {
     public class MainController : Controller
     {
-        static string UsuarioActual="";
+        
         HttpClient ClienteHttp = new HttpClient();
+
         public ActionResult CrearUsuario()
         {
             return View();
@@ -91,25 +93,61 @@ namespace Front.Controllers
             var uri = "https://localhost:44338/api/Cuenta/Login/" + Nuevo.User;
             var respose = await cliente.PostAsync(uri, content);
 
-            UsuarioActual = Nuevo.User;
-            return ListaDeChats(new List<ListaContactos>());
+            if (respose.ReasonPhrase == "OK")
+            {
+
+                Back.Data.Singleton.Instance.UsuarioActual = Nuevo.User;
+
+                var nuevo = new ListaContactos
+                {
+                    Contacto = "1"
+                };
+                var GetUsuario = new HttpClient();
+                Singleton.Instance.Actual = JsonConvert.DeserializeObject<Usuario>(await GetUsuario.GetStringAsync("https://localhost:44338/api/Cuenta/GetUsuario/Prueba"));
+                //obtenemos Usuario
+                return RedirectToAction("ListaDeChats");
+            }
+            else if (respose.ReasonPhrase == "Bad Request")
+            {
+
+            return View();
+            }
+            else
+            {
+                //not Found
+            return View();
+
+            }
+            
         }
-        public ActionResult ListaDeChats(List<ListaContactos> Lista)
+        public ActionResult ListaDeChats()
         {
             //enviar usuario para obtener lista
 
             //obtener lista de mensajes
             //Clasificar
             //var lista = new List<ListaContactos>();
-            
-            //lista.Add(");
-            //lista.Add("Jorge");
-            //lista.Add("Estuardo");
-            //lista.Add("Pablo");
 
+            Singleton.Instance.Actual.Contactos.Add("");
+            Singleton.Instance.Actual.Contactos.Add("Jorge");
+            Singleton.Instance.Actual.Contactos.Add("Estuardo");
+            Singleton.Instance.Actual.Contactos.Add("Pablo");
+           
             //Devolver
-            return View(Lista);
+
+            return View(Singleton.Instance.Actual);
         }
-       
+        public ActionResult Modificar()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Modificar(FormCollection collection)
+        {
+
+
+
+            return View();
+        }
     }
 }
