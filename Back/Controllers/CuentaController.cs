@@ -21,6 +21,19 @@ namespace Back.Controllers
         [HttpGet]
         public ActionResult<List<Usuario>> Get() =>
             _usuario.Get();
+        [HttpGet ("{user}")]
+        public ActionResult<Usuario> GetId(string user)
+        {
+            var modelo = _usuario.Get(user);
+            if(modelo!= null)
+            {
+                return modelo;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
         [HttpPost]
         [Route("Login/{user}")]
@@ -29,7 +42,14 @@ namespace Back.Controllers
                 var modelo = _usuario.Get(user);
             if (modelo != null)
             {
-                return Ok(modelo);
+                if (modelo.Password == password.Password)
+                {
+                    return Ok(modelo);
+                }
+                else
+                {
+                    return BadRequest("Contraseña incorrecta");
+                }
             }
             else
             {
