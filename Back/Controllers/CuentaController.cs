@@ -22,11 +22,11 @@ namespace Back.Controllers
         public ActionResult<List<Usuario>> Get() =>
             _usuario.Get();
 
-        [HttpGet("{user}/{password}")]
-        
-        public ActionResult<string> GetUsuario(string user,string password)
+        [HttpPost]
+        [Route("Login/{user}")]
+        public ActionResult<string> GetUsuario(string user,[FromBody] Usuario password)
         {
-            var modelo = _usuario.Get(user);
+                var modelo = _usuario.Get(user);
             if (modelo != null)
             {
                 return Ok(modelo);
@@ -37,7 +37,9 @@ namespace Back.Controllers
             }
 
         }
-        public ActionResult<Usuario> Post([FromBody] Usuario nuevo)
+        [HttpPost]
+        [Route("Crear")]
+        public ActionResult<Usuario> Create([FromBody] Usuario nuevo)
         {
             var modelo = _usuario.Get(nuevo.User);
             if (modelo == null)

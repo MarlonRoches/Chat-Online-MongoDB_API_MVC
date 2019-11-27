@@ -49,7 +49,7 @@ namespace Front.Controllers
             var cliente = new HttpClient();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var respose = await cliente.PostAsync("https://localhost:44338/api/Cuenta", content);
+            var respose = await cliente.PostAsync("https://localhost:44338/api/Cuenta/Crear", content);
 
 
             return View("Login");
@@ -85,7 +85,10 @@ namespace Front.Controllers
             //UsuarioActual= 
             //Verificar Que los campos sean correctos
             var cliente = new HttpClient();
-            var respose = await cliente.GetAsync("../api/Cuenta/"+enviar);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var uri = "https://localhost:44338/api/Cuenta/Login/" + Nuevo.User;
+            var respose = await cliente.PostAsync(uri, content);
 
             UsuarioActual = Nuevo.User;
             return View("ListaDeChats");
