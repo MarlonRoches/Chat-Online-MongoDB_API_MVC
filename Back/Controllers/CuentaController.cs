@@ -38,7 +38,7 @@ namespace Back.Controllers
         }
         public ActionResult<Usuario> Post([FromBody] Usuario nuevo)
         {
-            var modelo = _usuario.Get(nuevo.NombreUsuario);
+            var modelo = _usuario.Get(nuevo.User);
             if (modelo == null)
             {
                 _usuario.Create(nuevo);
