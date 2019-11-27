@@ -159,6 +159,9 @@
     <Compile Include="..\Back\Data\Singleton.cs">
       <Link>Singleton.cs</Link>
     </Compile>
+    <Compile Include="..\Back\Models\Usuario.cs">
+      <Link>Models\Usuario.cs</Link>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -169,7 +172,6 @@
     </Compile>
     <Compile Include="Models\ListaContactos.cs" />
     <Compile Include="Models\Mensaje.cs" />
-    <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

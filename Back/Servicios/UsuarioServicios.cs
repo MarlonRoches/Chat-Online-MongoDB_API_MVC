@@ -20,7 +20,7 @@ namespace Back.Servicios
             _usuarios.Find(user => true).ToList();
 
         public Usuario Get(string us) =>
-            _usuarios.Find<Usuario>(user => user.NombreUsuario == us).FirstOrDefault();
+            _usuarios.Find<Usuario>(user => user.User == us).FirstOrDefault();
 
         public Usuario Create(Usuario user)
         {
@@ -34,7 +34,7 @@ namespace Back.Servicios
         }
         public void Remove(Usuario user)
         {
-            _usuarios.DeleteOne(us => us.NombreUsuario == user.Id);
+            _usuarios.DeleteOne(us => us.User == user.Id);
         }
         public void Remove(string id)
         {

@@ -40,7 +40,7 @@ namespace Back.Controllers
         public IActionResult post([FromBody] Mensaje _nuevo)
         {
             _mensajes.Create(_nuevo);
-            CuentaController nuevo =new CuentaController();
+           // CuentaController nuevo =new CuentaController();
             return NoContent();
         }
 

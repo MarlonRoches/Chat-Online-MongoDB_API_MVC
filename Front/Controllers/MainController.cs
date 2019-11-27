@@ -7,6 +7,7 @@ using Back.Models;
 using Back.Data;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Text;
 
 namespace Front.Controllers
 {
@@ -19,38 +20,39 @@ namespace Front.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult CrearUsuario(FormCollection collection)
+        public async System.Threading.Tasks.Task<ActionResult> CrearUsuario(FormCollection collection)
         {
-            try
-            {
-                // TODO: Add insert logic here
-                var Nuevo = new Usuario
-                {
-                    Nombre = collection["Nombre"],
-                    Apellido= collection["Apellido"],
-                    eMail= collection["eMail"],
-                    User= collection["User"],
-                    Password = collection["Password"]
-                };
-                foreach (var item in Nuevo.User)
-                {
-                    Nuevo.LlaveSDES += (int)item;
-                }
-                //Cifrar Contraseña
-                if (Nuevo.LlaveSDES < 512)
-                {
-                    Nuevo.LlaveSDES += 512;
-                }
-                Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES, Nuevo.Password);
-                var json = JsonConvert.SerializeObject(Nuevo);
-                //enviar a api y generar token
 
-                return RedirectToAction("");
-            }
-            catch
+            // TODO: Add insert logic here
+            var Nuevo = new Usuario
             {
-                return View();
+                Nombre = collection["Nombre"],
+                Apellido = collection["Apellido"],
+                Password = collection["Password"],
+                User = collection["User"],
+                eMail = collection["eMail"],
+                Contactos = new List<string>()
+            };
+            foreach (var item in Nuevo.User)
+            {
+                Nuevo.LlaveSDES += (int)item;
             }
+            //Cifrar Contraseña
+            if (Nuevo.LlaveSDES < 512)
+            {
+                Nuevo.LlaveSDES += 512;
+            }
+            Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES, Nuevo.Password);
+            var json = JsonConvert.SerializeObject(Nuevo);
+            //enviar a api y generar token
+
+            var cliente = new HttpClient();
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var respose = await cliente.PostAsync("https://localhost:44338/api/Cuenta", content);
+
+
+            return View("Login");
         }
         public ActionResult Login()
         {
@@ -80,10 +82,13 @@ namespace Front.Controllers
                 var json = JsonConvert.SerializeObject(Nuevo);
                 var enviar = Nuevo.User+"/"+Nuevo.Password;
             //Generar Token
-            UsuarioActual= 
+            //UsuarioActual= 
             //Verificar Que los campos sean correctos
-            
-            return RedirectToAction("ListaDeChats");
+            var cliente = new HttpClient();
+            var respose = await cliente.GetAsync("../api/Cuenta/"+enviar);
+
+            UsuarioActual = Nuevo.User;
+            return View("ListaDeChats");
         }
         public ActionResult ListaDeChats()
         {

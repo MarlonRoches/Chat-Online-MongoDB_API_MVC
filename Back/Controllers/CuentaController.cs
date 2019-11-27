@@ -22,8 +22,9 @@ namespace Back.Controllers
         public ActionResult<List<Usuario>> Get() =>
             _usuario.Get();
 
-        [HttpGet("{user}")]
-        public ActionResult<string> GetUsuario(string user)
+        [HttpGet("{user}/{password}")]
+        
+        public ActionResult<string> GetUsuario(string user,string password)
         {
             var modelo = _usuario.Get(user);
             if (modelo != null)
@@ -38,7 +39,7 @@ namespace Back.Controllers
         }
         public ActionResult<Usuario> Post([FromBody] Usuario nuevo)
         {
-            var modelo = _usuario.Get(nuevo.NombreUsuario);
+            var modelo = _usuario.Get(nuevo.User);
             if (modelo == null)
             {
                 _usuario.Create(nuevo);
