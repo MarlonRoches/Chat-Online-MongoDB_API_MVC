@@ -1,33 +1,15 @@
-﻿@model IEnumerable<Front.Models.ListaContactos>
+﻿@model Back.Models.Usuario
 
 @{
     ViewBag.Title = "ListaDeChats";
 }
 
 <h2>ListaDeChats</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Contacto)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Contacto)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
+<ul>
+    @foreach (var item in Model.Contactos)
+    {
+    <li>
+@item
+    </li>
+    }
+</ul>

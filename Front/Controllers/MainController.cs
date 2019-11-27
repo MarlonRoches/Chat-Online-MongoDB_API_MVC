@@ -9,14 +9,15 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using Front.Models;
-using Back.Models;
+using Back.Data;
 
 namespace Front.Controllers
 {
     public class MainController : Controller
     {
-        static string UsuarioActual="";
+        
         HttpClient ClienteHttp = new HttpClient();
+
         public ActionResult CrearUsuario()
         {
             return View();
@@ -95,12 +96,15 @@ namespace Front.Controllers
             if (respose.ReasonPhrase == "OK")
             {
 
-                UsuarioActual = Nuevo.User;
+                Back.Data.Singleton.Instance.UsuarioActual = Nuevo.User;
 
                 var nuevo = new ListaContactos
                 {
                     Contacto = "1"
                 };
+                var GetUsuario = new HttpClient();
+                Singleton.Instance.Actual = JsonConvert.DeserializeObject<Usuario>(await GetUsuario.GetStringAsync("https://localhost:44338/api/Cuenta/GetUsuario/Prueba"));
+                //obtenemos Usuario
                 return RedirectToAction("ListaDeChats");
             }
             else if (respose.ReasonPhrase == "Bad Request")
@@ -124,14 +128,26 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            //lista.Add(");
-            //lista.Add("Jorge");
-            //lista.Add("Estuardo");
-            //lista.Add("Pablo");
+            Singleton.Instance.Actual.Contactos.Add("");
+            Singleton.Instance.Actual.Contactos.Add("Jorge");
+            Singleton.Instance.Actual.Contactos.Add("Estuardo");
+            Singleton.Instance.Actual.Contactos.Add("Pablo");
            
             //Devolver
-            return View(new List<ListaContactos>());
+
+            return View(Singleton.Instance.Actual);
         }
-       
+        public ActionResult Modificar()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Modificar(FormCollection collection)
+        {
+
+
+
+            return View();
+        }
     }
 }

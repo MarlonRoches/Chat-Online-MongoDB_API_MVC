@@ -3,7 +3,7 @@ using Back.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Back.Controllers;
-
+using Newtonsoft.Json;
 namespace Back.Controllers
 {
     [Route("api/[controller]")]
@@ -21,13 +21,14 @@ namespace Back.Controllers
         [HttpGet]
         public ActionResult<List<Usuario>> Get() =>
             _usuario.Get();
-        [HttpGet ("{user}")]
-        public ActionResult<Usuario> GetId(string user)
+        [HttpGet ]
+        [Route ("GetUsuario/{user}")]
+        public ActionResult<string> GetId(string user)
         {
             var modelo = _usuario.Get(user);
             if(modelo!= null)
             {
-                return modelo;
+                return JsonConvert.SerializeObject(modelo);
             }
             else
             {
@@ -44,6 +45,7 @@ namespace Back.Controllers
             {
                 if (modelo.Password == password.Password)
                 {
+                    var ok = Ok(modelo); 
                     return Ok(modelo);
                 }
                 else
