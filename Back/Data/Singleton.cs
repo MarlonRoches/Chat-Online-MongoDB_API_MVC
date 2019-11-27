@@ -290,9 +290,7 @@ namespace Back.Data
             }
         }
 
-        
-
-        public string DesifradoSDES(string Contraseña)
+        public string DescifradoSDES(int LlaveDelUsuario, string Contraseña)
         {
             #region VariablesGlobales
             string index_p10 = "2416390875";
@@ -346,53 +344,37 @@ namespace Back.Data
 
             #endregion
             //generacion de llaves
-            var originalkey = 837;
+
+            var originalkey = LlaveDelUsuario;
+
             var KEYAR = Generarkeys(originalkey);
-            var KEY1 = KEYAR[0];
-            var KEY2 = KEYAR[1];
+            var KEY1 = KEYAR[1];
+            var KEY2 = KEYAR[0];
             //CIFRANDO
-            var decoded = new FileStream("C:\\Users\\roche\\Desktop\\Lab22_Cifrado\\SpiderSenses.txt", FileMode.Open);
-            var lector = new BinaryReader(decoded);
+            var decoded = Contraseña;
 
-            var buffer = new byte[100000];
-            var nombrearchivo = $"{Path.GetFileName(decoded.Name).Split('.')[0]}_SDES.{"txt"}";
-            var encoded = new FileStream("C:\\Users\\roche\\Desktop\\Lab22_Cifrado\\" + nombrearchivo, FileMode.OpenOrCreate);
-            var writer = new BinaryWriter(encoded);
-            while (lector.BaseStream.Position != lector.BaseStream.Length)
-            {
-                buffer = lector.ReadBytes(100000);
-                foreach (var item in buffer)
-                {
-                    var caracter = (char)item;
-                    var bin = Convert.ToString(item, 2).PadLeft(8, '0');
-                    var monitor = Convert.ToByte(BinarioADecimal(CifradoSDES(KEY1, KEY2, bin)));
-                    caracter = (char)monitor;
-                    writer.Write(monitor);
-                }
-            }
-            decoded.Close();
-            encoded.Close();
-            //decifrado
-            buffer = null;
-            encoded = new FileStream("C:\\Users\\roche\\Desktop\\Lab22_Cifrado\\" + nombrearchivo, FileMode.Open);
-            lector = new BinaryReader(encoded);
-            nombrearchivo = $"{Path.GetFileName(encoded.Name).Split('.')[0]}_SDES.{"txt"}";
+            var encoded = "";
 
-            decoded = new FileStream("C:\\Users\\roche\\Desktop\\Lab22_Cifrado\\SpiderSensesSDESUncypher.txt", FileMode.OpenOrCreate);
-            writer = new BinaryWriter(decoded);
-            while (lector.BaseStream.Position != lector.BaseStream.Length)
+            foreach (var item in Contraseña)
             {
-                buffer = lector.ReadBytes(100000);
-                foreach (var item in buffer)
-                {
-                    var bin = Convert.ToString(item, 2).PadLeft(8, '0');
-                    var monitor = Convert.ToByte(BinarioADecimal(CifradoSDES(KEY2, KEY1, bin)));
-                    writer.Write(monitor);
-                }
+
+                var caracter = (char)item;
+                var bin = Convert.ToString(item, 2).PadLeft(8, '0');
+                var monitor = Convert.ToByte(BinarioADecimal(CifradoSDES(KEY1, KEY2, bin)));
+                caracter = (char)monitor;
+                encoded += caracter;
             }
-            decoded.Close();
-            encoded.Close();
-            return "";
+            decoded = "";
+            foreach (var item in encoded)
+            {
+
+                var caracter = (char)item;
+                var bin = Convert.ToString(item, 2).PadLeft(8, '0');
+                var monitor = Convert.ToByte(BinarioADecimal(CifradoSDES(KEY2, KEY1, bin)));
+                caracter = (char)monitor;
+                decoded += caracter;
+            }
+            return encoded;
 
             string CifradoSDES(string key1, string key2, string actual)
             {
@@ -576,5 +558,6 @@ namespace Back.Data
                 return permmuted;
             }
         }
+
     }
 }

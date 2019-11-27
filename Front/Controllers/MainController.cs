@@ -103,7 +103,7 @@ namespace Front.Controllers
                     Contacto = "1"
                 };
                 var GetUsuario = new HttpClient();
-                Singleton.Instance.Actual = JsonConvert.DeserializeObject<Usuario>(await GetUsuario.GetStringAsync("https://localhost:44338/api/Cuenta/GetUsuario/Prueba"));
+                Singleton.Instance.Actual = JsonConvert.DeserializeObject<Usuario>(await GetUsuario.GetStringAsync("https://localhost:44338/api/Cuenta/GetUsuario/"+ Nuevo.User));
                 //obtenemos Usuario
                 return RedirectToAction("ListaDeChats");
             }
@@ -139,15 +139,20 @@ namespace Front.Controllers
         }
         public ActionResult Modificar()
         {
-            return View();
+            Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES,Singleton.Instance.Actual.Password);  
+
+            return View(Singleton.Instance.Actual);
         }
         [HttpPost]
         public ActionResult Modificar(FormCollection collection)
         {
+            Singleton.Instance.Actual.Nombre = collection["Nombre"];
+            Singleton.Instance.Actual.Apellido= collection["Nombre"];
+            Singleton.Instance.Actual.Password = Singleton.Instance.CifradoSDES(Singleton.Instance.Actual.LlaveSDES, collection["Password"]);
+            Singleton.Instance.Actual.eMail = collection["eMail"];
 
 
-
-            return View();
+            return RedirectToAction("ListaDeChats");
         }
     }
 }
