@@ -21,8 +21,8 @@ namespace Back.Servicios
         public List<Usuario> Get() =>
             _usuarios.Find(user => true).ToList();
 
-        public Usuario Get(string id) =>
-            _usuarios.Find<Usuario>(user => user.Id == id).FirstOrDefault();
+        public Usuario Get(string us) =>
+            _usuarios.Find<Usuario>(user => user.NombreUsuario == us).FirstOrDefault();
 
         public Usuario Create(Usuario user)
         {
