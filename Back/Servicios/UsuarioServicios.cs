@@ -1,9 +1,7 @@
-﻿using MongoDB.Driver;
-using System;
+﻿using Back.Models;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Back.Models;
 
 namespace Back.Servicios
 {
@@ -15,14 +13,14 @@ namespace Back.Servicios
         {
             var cliente = new MongoClient(configuracion.ConnectionString);
             var Base = cliente.GetDatabase(configuracion.DatabaseName);
-            _usuarios = Base.GetCollection<Usuario>(configuracion.UsuarioCollectionName);
+            _usuarios = Base.GetCollection<Usuario>(configuracion.UsuariosCollectionName);
         }
 
         public List<Usuario> Get() =>
             _usuarios.Find(user => true).ToList();
 
-        public Usuario Get(string id) =>
-            _usuarios.Find<Usuario>(user => user.Id == id).FirstOrDefault();
+        public Usuario Get(string us) =>
+            _usuarios.Find<Usuario>(user => user.NombreUsuario == us).FirstOrDefault();
 
         public Usuario Create(Usuario user)
         {
@@ -32,11 +30,11 @@ namespace Back.Servicios
         public void Update(string id, Usuario entrada)
         {
             _usuarios.ReplaceOne(user => user.Id == id, entrada);
-                
+
         }
         public void Remove(Usuario user)
         {
-            _usuarios.DeleteOne(us => us.Id == user.Id);
+            _usuarios.DeleteOne(us => us.NombreUsuario == user.Id);
         }
         public void Remove(string id)
         {

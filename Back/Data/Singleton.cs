@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Back.Data
 {
     public class Singleton
-    {private static Singleton _instance = null;
+    {
+        private static Singleton _instance = null;
         public static Singleton Instance
         {
             get
@@ -73,23 +71,23 @@ namespace Back.Data
             //generacion de llaves
 
             var originalkey = LlaveDelUsuario;
-            
+
             var KEYAR = Generarkeys(originalkey);
             var KEY1 = KEYAR[0];
             var KEY2 = KEYAR[1];
             //CIFRANDO
             var decoded = Contraseña;
-            
-            var encoded ="";
 
-            foreach (var item  in Contraseña)
+            var encoded = "";
+
+            foreach (var item in Contraseña)
             {
 
-                    var caracter = (char)item;
-                    var bin = Convert.ToString(item, 2).PadLeft(8, '0');
-                    var monitor = Convert.ToByte(BinarioADecimal(CifradoSDES(KEY1, KEY2, bin)));
-                    caracter = (char)monitor;
-                    encoded += caracter;
+                var caracter = (char)item;
+                var bin = Convert.ToString(item, 2).PadLeft(8, '0');
+                var monitor = Convert.ToByte(BinarioADecimal(CifradoSDES(KEY1, KEY2, bin)));
+                caracter = (char)monitor;
+                encoded += caracter;
             }
             decoded = "";
             foreach (var item in encoded)
