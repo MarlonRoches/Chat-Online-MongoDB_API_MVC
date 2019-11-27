@@ -28,18 +28,6 @@
         string ConnectionString { get; set; }
         string DatabaseName { get; set; }
     }
-    public class ChatsDatabaseSettings : IChatsDatabaseSettings
-    {
-        public string ChatCollectionName { get; set; }
-        public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
-    }
-
-    public interface IChatsDatabaseSettings
-    {
-        string ChatCollectionName { get; set; }
-        string ConnectionString { get; set; }
-        string DatabaseName { get; set; }
-    }
+    
     //}
 }

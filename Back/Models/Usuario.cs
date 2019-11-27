@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace Back.Models
 {
@@ -14,6 +15,8 @@ namespace Back.Models
         public string Apellido { get; set; }
         public string Password { get; set; }
         public string NombreUsuario { get; set; }
+        public string CorreoElectronico { get; set; }
+        public List<string> Contactos { get; set; }
 
     }
 }

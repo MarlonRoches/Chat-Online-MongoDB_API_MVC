@@ -29,10 +29,7 @@ namespace Back
             services.Configure<MensajesDatabaseSettings>(Configuration.GetSection(nameof(MensajesDatabaseSettings)));
             services.AddSingleton<IMensajesDatabaseSettings>(sp => sp.GetRequiredService<IOptions<MensajesDatabaseSettings>>().Value);
             services.AddSingleton<MensajesServicios>();
-            //Chat
-            services.Configure<ChatsDatabaseSettings>(Configuration.GetSection(nameof(ChatsDatabaseSettings)));
-            services.AddSingleton<IChatsDatabaseSettings>(sp => sp.GetRequiredService<IOptions<ChatsDatabaseSettings>>().Value);
-            services.AddSingleton<ChatsServicios>();
+          
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

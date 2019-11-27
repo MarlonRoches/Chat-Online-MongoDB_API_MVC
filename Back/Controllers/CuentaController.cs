@@ -2,6 +2,7 @@
 using Back.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Back.Controllers;
 
 namespace Back.Controllers
 {
@@ -10,6 +11,7 @@ namespace Back.Controllers
     public class CuentaController : ControllerBase
     {
         private readonly UsuarioServicios _usuario;
+        
 
         public CuentaController(UsuarioServicios usuario)
         {
@@ -85,7 +87,9 @@ namespace Back.Controllers
             if (modelo != null)
             {
                 _usuario.Remove(modelo.Id);
+             
                 return NoContent();
+
                 //Eliminar chats
                 //Eliminar conversaciones
             }

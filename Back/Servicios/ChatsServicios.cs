@@ -19,8 +19,8 @@ namespace Back.Servicios
         public List<Chat> Get() =>
             _Chats.Find(_chat => true).ToList();
 
-        public Chat Get(string id) =>
-            _Chats.Find<Chat>(_chat => _chat.Id == id).FirstOrDefault();
+        public Chat Get(string user) =>
+            _Chats.Find<Chat>(_chat => _chat.NombreUsuario == user).FirstOrDefault();
 
         public Chat Create(Chat _chat)
         {
