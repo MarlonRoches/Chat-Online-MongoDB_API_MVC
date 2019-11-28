@@ -11,12 +11,12 @@ namespace Back.Models
         public string                       Id                  { get; set; }
         [BsonElement("Mensaje")]
         public string                       IDEmisorReceptor    { get; set; }
-        public Dictionary<DateTime, Extesiones> EmisorMen = new Dictionary<DateTime, Extesiones>();
-        public Dictionary<DateTime, Extesiones> ReceptorMen = new Dictionary<DateTime, Extesiones>();  
+        public Dictionary<string, Extesiones> EmisorMen = new Dictionary<string, Extesiones>();
+        public Dictionary<string, Extesiones> ReceptorMen = new Dictionary<string, Extesiones>();  
 
         public string                       Emisor              { get; set; }
         public string                       Receptor            { get; set; }
-        public Dictionary<DateTime,bool> MensajesOrdenados = new Dictionary<DateTime, bool>();
+        public Dictionary<string,bool> MensajesOrdenados = new Dictionary<string, bool>();
 
     }
 }
