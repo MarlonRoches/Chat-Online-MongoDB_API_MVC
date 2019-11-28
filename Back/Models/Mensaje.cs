@@ -16,7 +16,7 @@ namespace Back.Models
 
         public string                       Emisor              { get; set; }
         public string                       Receptor            { get; set; }
-        
+        public List<DateTime> MensajesOrdenados { get; set; }
 
     }
 }

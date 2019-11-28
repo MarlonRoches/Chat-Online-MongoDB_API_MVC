@@ -129,7 +129,7 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            Singleton.Instance.Actual.Contactos.Add("asasd");
+            Singleton.Instance.Actual.Contactos.Add("Gerardo");
             Singleton.Instance.Actual.Contactos.Add("Jorge");
             Singleton.Instance.Actual.Contactos.Add("Estuardo");
             Singleton.Instance.Actual.Contactos.Add("Pablo");
@@ -167,15 +167,25 @@ namespace Front.Controllers
                 Emisor= Emisor,Receptor= Receptor, IDEmisorReceptor =$"{Emisor},{Receptor}", EmisorMen = new Dictionary<DateTime, Extesiones>(), Id =null,
                 ReceptorMen = new Dictionary<DateTime, Extesiones>()
             };
-            var Ejemlo = new Extesiones
+            var Ejemlo = new Extesiones();
+            int contadorprueba = 0;
+            while (contadorprueba <15)
             {
-                Texto= "Hola emisor", Extesion=""
-            };
-            Prueba.ReceptorMen.Add(DateTime.Now, Ejemlo);
-            Ejemlo.Texto = "Hola Archivo";
-            Ejemlo.Extesion = ".txt";
-            Prueba.EmisorMen.Add(DateTime.Now, Ejemlo);
+                Ejemlo.Texto = "Hola emisor " + contadorprueba;
+                Ejemlo.Extesion = "";
+                var enviado = DateTime.Now;
+                Prueba.ReceptorMen.Add(enviado, Ejemlo);
+                    Ejemlo.Texto = "Hola Receptor " + contadorprueba; contadorprueba++;
+                if ((contadorprueba % 2) == 0)
+                {
+                Ejemlo.Extesion = ".txt";
+                }
+                enviado = DateTime.Now;
+                Prueba.EmisorMen.Add(DateTime.Now, Ejemlo);
+
+            }
             var json = JsonConvert.SerializeObject(Prueba);
+
             return View(Prueba);
         }
 
