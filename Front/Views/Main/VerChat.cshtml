@@ -16,17 +16,33 @@
             @Model.Receptor
         </th>
     </tr>
-    @foreach (var item in Model.EmisorMen.Keys)
+    @foreach (var item in Model.MensajesOrdenados)
     {
     <tr>
+        @if (Model.EmisorMen.ContainsKey(item.Key)==true || item.Value==false)
+        {
         <td>
-asdasdasd
+            @Model.EmisorMen[item.Key].Texto
         </td>
 
-        <td>
-asdasdasd
+            <td>
+
+            </td>
+        }
+        else if (Model.ReceptorMen.ContainsKey(item.Key)==true && item.Value == true)
+        {
+            <td>
+                
+            </td>
+
+            <td>
             
-        </td>
+            @Model.ReceptorMen[item.Key].Texto
+
+            </td>
+
+
+        }
     </tr>       
     }
 </table>

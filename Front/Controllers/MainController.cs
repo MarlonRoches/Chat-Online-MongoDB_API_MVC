@@ -169,23 +169,27 @@ namespace Front.Controllers
             };
             var Ejemlo = new Extesiones();
             int contadorprueba = 0;
-            while (contadorprueba <15)
+            while (contadorprueba <5)
             {
                 Ejemlo.Texto = "Hola emisor " + contadorprueba;
                 Ejemlo.Extesion = "";
                 var enviado = DateTime.Now;
+                
                 Prueba.ReceptorMen.Add(enviado, Ejemlo);
+
+                Prueba.MensajesOrdenados.Add(enviado,true);
                     Ejemlo.Texto = "Hola Receptor " + contadorprueba; contadorprueba++;
                 if ((contadorprueba % 2) == 0)
-                {
+                {   
                 Ejemlo.Extesion = ".txt";
                 }
-                enviado = DateTime.Now;
-                Prueba.EmisorMen.Add(DateTime.Now, Ejemlo);
+                var enviado2 = DateTime.Now;
+                Prueba.EmisorMen.Add(enviado2, Ejemlo);  
+                Prueba.MensajesOrdenados.Add(enviado2,false);
 
             }
             var json = JsonConvert.SerializeObject(Prueba);
-
+            var lol = new Usuario();
             return View(Prueba);
         }
 
