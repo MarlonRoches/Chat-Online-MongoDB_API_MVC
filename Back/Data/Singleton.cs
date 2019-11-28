@@ -289,7 +289,6 @@ namespace Back.Data
                 return permmuted;
             }
         }
-
         public string DescifradoSDES(int LlaveDelUsuario, string Contraseña)
         {
             #region VariablesGlobales

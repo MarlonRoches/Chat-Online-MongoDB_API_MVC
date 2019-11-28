@@ -64,9 +64,10 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> Login(FormCollection collection)
         {
-           
-                // TODO: Add insert logic here
-                var Nuevo = new Usuario
+            string path = Server.MapPath("/");
+            //or 
+            string path2 = Server.MapPath("~");                // TODO: Add insert logic here
+            var Nuevo = new Usuario
                 {
                     User = collection["User"],
                     Password = collection["Password"]
@@ -128,7 +129,7 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            Singleton.Instance.Actual.Contactos.Add("");
+            Singleton.Instance.Actual.Contactos.Add("asasd");
             Singleton.Instance.Actual.Contactos.Add("Jorge");
             Singleton.Instance.Actual.Contactos.Add("Estuardo");
             Singleton.Instance.Actual.Contactos.Add("Pablo");
