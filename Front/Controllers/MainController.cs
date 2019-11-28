@@ -55,7 +55,7 @@ namespace Front.Controllers
             var respose = await cliente.PostAsync("https://localhost:44338/api/Cuenta/Crear", content);
 
 
-            return View("Login");
+            return RedirectToAction("Login");
         }
         public ActionResult Login()
         {
