@@ -17,6 +17,6 @@ namespace Back.Models
         public string                       Emisor              { get; set; }
         public string                       Receptor            { get; set; }
         public Dictionary<DateTime,bool> MensajesOrdenados = new Dictionary<DateTime, bool>();
-       
+
     }
 }

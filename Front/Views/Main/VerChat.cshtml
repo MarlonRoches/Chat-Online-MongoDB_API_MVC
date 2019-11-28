@@ -18,61 +18,129 @@
     </tr>
     @foreach (var item in Model.MensajesOrdenados)
     {
-    <tr>
-        @if (Model.EmisorMen.ContainsKey(item.Key)==true || item.Value==false)
-        {
-        <td>
-            @Model.EmisorMen[item.Key].Texto
-        </td>
+        <tr>
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true || item.Value == false)
+            {
+                <td>
+                    @Model.EmisorMen[item.Key].Texto
+                </td>
 
-            <td>
+                <td></td>
+            }
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == true)
+            {
+                <td></td>
 
-            </td>
-        }
-        else if (Model.ReceptorMen.ContainsKey(item.Key)==true && item.Value == true)
-        {
-            <td>
-                
-            </td>
+                <td>
 
-            <td>
-            
-            @Model.ReceptorMen[item.Key].Texto
+                    @Model.ReceptorMen[item.Key].Texto
 
-            </td>
+                </td>
 
 
-        }
-    </tr>       
+            }
+        </tr>
+    }
+
+    @foreach (var item in Model.MensajesOrdenados)
+    {
+        <tr>
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true || item.Value == false)
+            {
+                <td>
+                    @Model.EmisorMen[item.Key].Texto
+                </td>
+
+                <td></td>
+            }
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == true)
+            {
+                <td></td>
+
+                <td>
+
+                    @Model.ReceptorMen[item.Key].Texto
+
+                </td>
+
+
+            }
+        </tr>
+    }
+
+
+    @foreach (var item in Model.MensajesOrdenados)
+    {
+        <tr>
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true || item.Value == false)
+            {
+                <td>
+                    @Model.EmisorMen[item.Key].Texto
+                </td>
+
+                <td></td>
+            }
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == true)
+            {
+                <td></td>
+
+                <td>
+
+                    @Model.ReceptorMen[item.Key].Texto
+
+                </td>
+
+
+            }
+        </tr>
+    }
+
+
+    @foreach (var item in Model.MensajesOrdenados)
+    {
+        <tr>
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true || item.Value == false)
+            {
+                <td>
+                    @Model.EmisorMen[item.Key].Texto
+                </td>
+
+                <td></td>
+            }
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == true)
+            {
+                <td></td>
+
+                <td>
+
+                    @Model.ReceptorMen[item.Key].Texto
+
+                </td>
+
+
+            }
+        </tr>
     }
 </table>
+.
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+.
+<br />
+.
+<br />
+
 
 <textarea id="Hola" placeholder="EscribaMensaje..."></textarea>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.
 <style>
     #Hola {
         width: 800px;

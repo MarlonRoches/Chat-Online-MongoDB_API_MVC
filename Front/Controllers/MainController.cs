@@ -168,25 +168,23 @@ namespace Front.Controllers
                 ReceptorMen = new Dictionary<DateTime, Extesiones>()
             };
             var Ejemlo = new Extesiones();
-            int contadorprueba = 0;
-            while (contadorprueba <5)
+            for (int i = 0; i < 5; i++)
             {
-                Ejemlo.Texto = "Hola emisor " + contadorprueba;
+                Ejemlo.Texto = "Hola emisor " + i;
                 Ejemlo.Extesion = "";
                 var enviado = DateTime.Now;
-                
+
                 Prueba.ReceptorMen.Add(enviado, Ejemlo);
 
-                Prueba.MensajesOrdenados.Add(enviado,true);
-                    Ejemlo.Texto = "Hola Receptor " + contadorprueba; contadorprueba++;
-                if ((contadorprueba % 2) == 0)
-                {   
-                Ejemlo.Extesion = ".txt";
+                Prueba.MensajesOrdenados.Add(enviado, true);
+                Ejemlo.Texto = "Hola Receptor " + i;
+                if ((i % 2) == 0)
+                {
+                    Ejemlo.Extesion = ".txt";
                 }
                 var enviado2 = DateTime.Now;
-                Prueba.EmisorMen.Add(enviado2, Ejemlo);  
-                Prueba.MensajesOrdenados.Add(enviado2,false);
-
+                Prueba.EmisorMen.Add(enviado2, Ejemlo);
+                Prueba.MensajesOrdenados.Add(enviado2, false);
             }
             var json = JsonConvert.SerializeObject(Prueba);
             var lol = new Usuario();

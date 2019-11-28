@@ -121,19 +121,33 @@ namespace Back.Controllers
 
         [HttpPut("{user}")]
         [Route("ModificarContactos")]
-        public IActionResult ModificarContactos(string user, [FromBody] Usuario ModificarUsuairo)
+        public IActionResult ModificarContactos(string emisor, [FromBody] string receptor)
         {
-            var modelo = _usuario.Get(user);
+            var modelo = _usuario.Get(emisor);
             if (modelo != null)
             {
+                List<string> contactos = new List<string>();
+                if (modelo.Contactos == null)
+                {
+                    string x = receptor;
+                    contactos.Add(x);
+                    modelo.Contactos = contactos;
+                }
+                else
+                {
+                    if (modelo.Contactos.Contains(receptor) == false)
+                    {
+                        contactos = modelo.Contactos;
+                        contactos.Add(receptor);
+                        modelo.Contactos = contactos;
+                    }
 
-                ModificarUsuairo.Id = modelo.Id;
-                ModificarUsuairo.Apellido = modelo.Apellido;
-                ModificarUsuairo.eMail = modelo.eMail;
-                ModificarUsuairo.Nombre = modelo.Nombre;
-                ModificarUsuairo.Password = modelo.Password;
-                ModificarUsuairo.LlaveSDES = modelo.LlaveSDES;
-                _usuario.Update(modelo.Id, ModificarUsuairo);
+
+                }
+              
+               
+                
+                _usuario.Update(modelo.Id, modelo);
 
                 return NoContent();
             }
@@ -145,7 +159,7 @@ namespace Back.Controllers
 
 
         }
-
+       
         [HttpDelete("{user}")]
         public IActionResult Delete(string user)
         {
