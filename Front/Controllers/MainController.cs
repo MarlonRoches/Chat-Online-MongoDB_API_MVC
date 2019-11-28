@@ -195,7 +195,11 @@ namespace Front.Controllers
             }
             
         }
+        public void VerChat(string mensaje)
+        {
 
+            var lol = 0;
+        }
         public ActionResult NuevoChat()
         {
 
@@ -213,7 +217,7 @@ namespace Front.Controllers
             return View();
         }
 
-        public ActionResult Tablas ()
+        public ActionResult Obtener_Mensaje(string Texto)
         {
             return View();
         }

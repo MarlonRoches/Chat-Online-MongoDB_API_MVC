@@ -7,14 +7,12 @@ namespace Back.Models
 {
     public class Receptor
     {
-        public DateTime HoraMensaje { get; set; }
+        public string HoraMensaje { get; set; }
         public string Texto { get; set; }
         public string Extension { get; set; }
         public bool Origen { get; set; }
         public string Emisor { get; set; }
         public string Recept { get; set; }
         public string IDEmisorReceptor { get; set; }
-    
-
     }
 }

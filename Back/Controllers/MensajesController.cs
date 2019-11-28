@@ -73,8 +73,8 @@ namespace Back.Controllers
                 {
                     Mensaje nuevo = new Mensaje();
                     Extesiones AgregarTexto = new Extesiones();
-                    Dictionary<DateTime, Extesiones> Emisor = new Dictionary<DateTime, Extesiones>();
-                    Dictionary<DateTime, bool> Indice = new Dictionary<DateTime, bool>();
+                    Dictionary<string, Extesiones> Emisor = new Dictionary<string, Extesiones>();
+                    Dictionary<string, bool> Indice = new Dictionary<string, bool>();
                     Indice.Add(_nuevo.HoraMensaje, _nuevo.Origen);
                     nuevo.IDEmisorReceptor = _nuevo.IDEmisorReceptor;
                     nuevo.Receptor = _nuevo.Recept;
@@ -134,8 +134,8 @@ namespace Back.Controllers
                 {
                    
                     Extesiones AgregarTexto = new Extesiones();
-                    Dictionary<DateTime, Extesiones> Emisor = new Dictionary<DateTime, Extesiones>();
-                    Dictionary<DateTime, bool> Indice = new Dictionary<DateTime, bool>();
+                    Dictionary<string, Extesiones> Emisor = new Dictionary<string, Extesiones>();
+                    Dictionary<string, bool> Indice = new Dictionary<string, bool>();
                     AgregarTexto.Texto = _nuevo.Texto;
                     AgregarTexto.Extesion = _nuevo.Extension;
                     modelo.Receptor = _nuevo.Recept;
