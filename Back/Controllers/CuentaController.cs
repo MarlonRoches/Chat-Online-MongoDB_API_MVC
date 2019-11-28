@@ -35,16 +35,16 @@ namespace Back.Controllers
         }
         [HttpGet]
         [Route ("VerificarUsuario/{user}")]
-        public bool VerificarUsuario(string user)
+        public IActionResult VerificarUsuario(string user)
         {
             var modelo = _usuario.Get(user);
             if(modelo == null)
             {
-                return false;
+                return NotFound();
             }
             else
             {
-                return true;
+                return Ok();
             }
 
         }

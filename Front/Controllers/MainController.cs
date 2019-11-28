@@ -72,8 +72,8 @@ namespace Front.Controllers
                     User = collection["User"],
                     Password = collection["Password"]
                 };
-                //Cifrar Contraseña
-                
+            //Cifrar Contraseña
+            Singleton.Instance.UsuarioActual = collection["User"];
                 foreach (var item in Nuevo.User)
                 {
                     Nuevo.LlaveSDES+= (int)item;
@@ -129,8 +129,8 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            Singleton.Instance.Actual.Contactos.Add("Gerardo");
-            Singleton.Instance.Actual.Contactos.Add("Jorge");
+            Singleton.Instance.Actual.Contactos.Add("SergioKun");
+            Singleton.Instance.Actual.Contactos.Add("Genesis");
             Singleton.Instance.Actual.Contactos.Add("Estuardo");
             Singleton.Instance.Actual.Contactos.Add("Pablo");
            
@@ -159,36 +159,58 @@ namespace Front.Controllers
             return RedirectToAction("ListaDeChats");
         }
 
-        public ActionResult VerChat(string Emisor, string Receptor)
+        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Emisor, string Receptor)
+        {
+            var cliente = new HttpClient();
+
+            //verificar usuario
+            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
+            var respose = await cliente.GetAsync(uri);
+
+            if (respose.ReasonPhrase == "Not Found") //No existe el usuario
+            {
+                return RedirectToAction("ListaDeChats");
+            }
+            else
+            {
+            uri = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
+            respose = await cliente.GetAsync(uri);
+                if (respose.ReasonPhrase =="OK")
+                {
+                    //return conversacion que me devuelve el api
+                    var ChatExistente = new Mensaje();
+                        return View(ChatExistente);
+                }
+                else//no existe
+                {
+                    //return nueva conversacion 
+                    var NuevoChat = new Mensaje
+                    {
+                        Emisor = Emisor,
+                        Receptor= Receptor,
+                    };
+            return View(NuevoChat);
+
+                }
+            }
+            
+        }
+
+        public ActionResult NuevoChat()
         {
 
-            var Prueba = new Mensaje
-            {
-                Emisor= Emisor,Receptor= Receptor, IDEmisorReceptor =$"{Emisor},{Receptor}", EmisorMen = new Dictionary<DateTime, Extesiones>(), Id =null,
-                ReceptorMen = new Dictionary<DateTime, Extesiones>()
-            };
-            var Ejemlo = new Extesiones();
-            for (int i = 0; i < 5; i++)
-            {
-                Ejemlo.Texto = "Hola emisor " + i;
-                Ejemlo.Extesion = "";
-                var enviado = DateTime.Now;
+            return View();
+        }
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> NuevoChat(string Emisor, string Receptor)
+        {
+            var cliente = new HttpClient();
 
-                Prueba.ReceptorMen.Add(enviado, Ejemlo);
 
-                Prueba.MensajesOrdenados.Add(enviado, true);
-                Ejemlo.Texto = "Hola Receptor " + i;
-                if ((i % 2) == 0)
-                {
-                    Ejemlo.Extesion = ".txt";
-                }
-                var enviado2 = DateTime.Now;
-                Prueba.EmisorMen.Add(enviado2, Ejemlo);
-                Prueba.MensajesOrdenados.Add(enviado2, false);
-            }
-            var json = JsonConvert.SerializeObject(Prueba);
-            var lol = new Usuario();
-            return View(Prueba);
+            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
+            var respose = await cliente.GetAsync(uri);
+
+            return View();
         }
 
         public ActionResult Tablas ()
