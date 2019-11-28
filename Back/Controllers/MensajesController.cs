@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Back.Models;
 using Back.Servicios;
+using Newtonsoft.Json;
 
 namespace Back.Controllers
 {
@@ -46,6 +47,7 @@ namespace Back.Controllers
                 var modelo = _mensajes.Get(_nuevo.IDEmisorReceptor);
                 if (modelo == null)
                 {
+                   
                     _mensajes.Create(_nuevo);
                     UsuariosDatabaseSettings nuevo = new UsuariosDatabaseSettings();
                     nuevo.ConnectionString = "mongodb://localhost:27017";
@@ -54,6 +56,10 @@ namespace Back.Controllers
                     UsuarioServicios nuevo2 = new UsuarioServicios(nuevo);
                     CuentaController ModificarContactos = new CuentaController(nuevo2);
                     ModificarContactos.ModificarContactos(_nuevo.Emisor, _nuevo.Receptor);
+                }
+                else
+                {
+                    LlamadoCambiosAEmisor(modelo.IDEmisorReceptor, _nuevo);
                 }
              
               
@@ -94,7 +100,7 @@ namespace Back.Controllers
                 }
                 else
                 {
-
+                    LlamadoCambiosAReceptor(modelo.IDEmisorReceptor, _nuevo);
                     //de lo contrario existe por lo tanto agregar el mensaje nuevo al put
                 }
 
@@ -103,9 +109,18 @@ namespace Back.Controllers
             }
             return NoContent();
         }
-        [HttpPut]
+
+        public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)
+        {
+            MensajeNuevoEmisor(x, nuevo);
+        }
+        public void LlamadoCambiosAReceptor(string x, Receptor nuevo)
+        {
+            MensajeNuevoReceptor(x, nuevo);
+        }
+        [HttpPut (Name = "ModEmisor")]
         [Route ("AgregarMensajeEmisor/{UsuarioCompuesto}")]
-        public IActionResult MensajeNuevo(string UsuarioCompuesto, [FromBody] Mensaje nuevo)
+        public IActionResult MensajeNuevoEmisor(string UsuarioCompuesto, [FromBody] Mensaje nuevo)
         {
             if(ModelState.IsValid)
             {
@@ -123,7 +138,7 @@ namespace Back.Controllers
         }
         [HttpPut]
         [Route("AgregarMensajeReceptor/{UsuarioCompuesto}")]
-        public IActionResult MensajeNuevo(string UsuarioCompuesto, [FromBody] Receptor _nuevo)
+        public IActionResult MensajeNuevoReceptor(string UsuarioCompuesto, [FromBody] Receptor _nuevo)
         {
 
             if (ModelState.IsValid)
