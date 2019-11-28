@@ -22,10 +22,11 @@ namespace Back.Controllers
         [HttpGet]
         public ActionResult<List<Mensaje>> Get() =>
             _mensajes.Get();
-        [HttpGet("{user}")]
-        public ActionResult<string> GetId(string user)
+        [HttpGet]
+        [Route("ObtenerConversacion/{userCompuesto}")]
+        public ActionResult<string> GetId(string userCompuesto)
         {
-            var modelo = _mensajes.Get(user);
+            var modelo = _mensajes.Get(userCompuesto);
             if(modelo!=null)
             {
                 return Ok(modelo);
@@ -37,16 +38,34 @@ namespace Back.Controllers
             }
         }
         [HttpPost]
+        [Route ("CrearConversacion")]
         public IActionResult post([FromBody] Mensaje _nuevo)
         {
-            _mensajes.Create(_nuevo);
-           // CuentaController nuevo =new CuentaController();
+            if (ModelState.IsValid)
+            {
+                var modelo = _mensajes.Get(_nuevo.IDEmisorReceptor);
+                if (modelo == null)
+                {
+                    _mensajes.Create(_nuevo);
+                    UsuariosDatabaseSettings nuevo = new UsuariosDatabaseSettings();
+                    nuevo.ConnectionString = "mongodb://localhost:27017";
+                    nuevo.DatabaseName = "Teules";
+                    nuevo.UsuariosCollectionName = "usuarios";
+                    UsuarioServicios nuevo2 = new UsuarioServicios(nuevo);
+                    CuentaController ModificarContactos = new CuentaController(nuevo2);
+                    ModificarContactos.ModificarContactos(_nuevo.Emisor, _nuevo.Receptor);
+                }
+              
+
+
+            }
             return NoContent();
         }
+        
 
 
-        
-           
-        
+
+
+
     }
 }

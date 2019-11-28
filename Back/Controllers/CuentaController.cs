@@ -126,7 +126,26 @@ namespace Back.Controllers
             var modelo = _usuario.Get(emisor);
             if (modelo != null)
             {
-                modelo.Contactos.Add(receptor);
+                List<string> contactos = new List<string>();
+                if (modelo.Contactos == null)
+                {
+                    string x = receptor;
+                    contactos.Add(x);
+                    modelo.Contactos = contactos;
+                }
+                else
+                {
+                    if (modelo.Contactos.Contains(receptor) == false)
+                    {
+                        contactos = modelo.Contactos;
+                        contactos.Add(receptor);
+                        modelo.Contactos = contactos;
+                    }
+
+
+                }
+              
+               
                 
                 _usuario.Update(modelo.Id, modelo);
 
