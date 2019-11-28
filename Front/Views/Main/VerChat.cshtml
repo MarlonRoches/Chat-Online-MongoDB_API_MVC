@@ -1,0 +1,50 @@
+﻿@model Back.Models.Mensaje
+
+@{
+    ViewBag.Title = "VerChat";
+}
+
+<h2>@Model.Receptor</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Model.Emisor
+        </th>
+
+
+        <th>
+            @Model.Receptor
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+@Html.DisplayFor(modelItem =>Model.Emisor): @html
+        </td>
+
+        <td>
+@Html.DisplayFor(modelItem =>Model.Receptor):
+            
+        </td>
+    </tr>       
+    }
+</table>
+
+<textarea id="Hola" placeholder="EscribaMensaje..."></textarea>
+
+<style>
+    #Hola {
+        width: 800px;
+        height: 100px;
+        position:fixed;
+        left: 15%;
+        top: 80%;
+    }
+    #cuadro {
+        background-color :black;
+    }
+    
+
+</style>
+

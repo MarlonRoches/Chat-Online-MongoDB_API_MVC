@@ -159,6 +159,12 @@
     <Compile Include="..\Back\Data\Singleton.cs">
       <Link>Singleton.cs</Link>
     </Compile>
+    <Compile Include="..\Back\Models\Extesiones.cs">
+      <Link>Models\Extesiones.cs</Link>
+    </Compile>
+    <Compile Include="..\Back\Models\Mensaje.cs">
+      <Link>Models\Mensaje.cs</Link>
+    </Compile>
     <Compile Include="..\Back\Models\Usuario.cs">
       <Link>Models\Usuario.cs</Link>
     </Compile>
@@ -171,7 +177,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ListaContactos.cs" />
-    <Compile Include="Models\Mensaje.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +258,9 @@
     <Content Include="Views\Main\Prueba.cshtml" />
     <Content Include="Views\Main\ListaDeChats.cshtml" />
     <Content Include="Views\Main\Modificar.cshtml" />
+    <Content Include="Views\Main\ObtenerChat.cshtml" />
+    <Content Include="Views\Main\VerChat.cshtml" />
+    <Content Include="Views\Main\Tablas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -158,5 +158,30 @@ namespace Front.Controllers
 
             return RedirectToAction("ListaDeChats");
         }
+
+        public ActionResult VerChat(string Emisor, string Receptor)
+        {
+
+            var Prueba = new Mensaje
+            {
+                Emisor= Emisor,Receptor= Receptor, IDEmisorReceptor =$"{Emisor},{Receptor}", EmisorMen = new Dictionary<DateTime, Extesiones>(), Id =null,
+                ReceptorMen = new Dictionary<DateTime, Extesiones>()
+            };
+            var Ejemlo = new Extesiones
+            {
+                Texto= "Hola emisor", Extesion=""
+            };
+            Prueba.ReceptorMen.Add(DateTime.Now, Ejemlo);
+            Ejemlo.Texto = "Hola Archivo";
+            Ejemlo.Extesion = ".txt";
+            Prueba.EmisorMen.Add(DateTime.Now, Ejemlo);
+            var json = JsonConvert.SerializeObject(Prueba);
+            return View(Prueba);
+        }
+
+        public ActionResult Tablas ()
+        {
+            return View();
+        }
     }
 }

@@ -12,12 +12,13 @@
          @item 
         <ul>
             <li style="color:springgreen">
-        @Html.ActionLink("VerChat", "VerChat")
+        @Html.ActionLink("Ver Chat", "VerChat", new { Emisor = Model.User, Receptor = item})
 
             </li>
             <li style="color: cadetblue">
 
-        @Html.ActionLink("Eliminar", "EliminarChat");
+        @Html.ActionLink("Eliminar Chat", "EliminarChat", new { Emisor = Model.User, Receptor = item })
+
                 </li>
         </ul>
     </li>
