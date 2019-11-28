@@ -16,57 +16,80 @@
             @Model.Receptor
         </th>
     </tr>
-    @foreach (var item in Model.EmisorMen.Keys)
+    @foreach (var item in Model.MensajesOrdenados)
     {
-    <tr>
-        <td>
-asdasdasd
-        </td>
+        <tr>
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true || item.Value == false)
+            {
+                <td>
+                    @Model.EmisorMen[item.Key].Texto
+                </td>
 
-        <td>
-asdasdasd
-            
-        </td>
-    </tr>       
+                <td></td>
+            }
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == true)
+            {
+                <td></td>
+
+                <td>
+
+                    @Model.ReceptorMen[item.Key].Texto
+
+                </td>
+
+
+            }
+        </tr>
     }
+
+   
+
+
+   
+
+
+   
 </table>
-
-<textarea id="Hola" placeholder="EscribaMensaje..."></textarea>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+.
+<br />
+.
+<br />
+
+
+
+<textarea id="Hola" placeholder="Mensaje..."></textarea>
+    <button id="Boton" type="button" style=" background-color:green" > Enviar </button>
+
+
 <style>
     #Hola {
         width: 800px;
-        height: 100px;
         position:fixed;
         left: 15%;
-        top: 80%;
+        top: 80%; 
     }
-    #cuadro {
-        background-color :black;
+    #Boton {
+        position: fixed;
+        left: 15%;
+        top: 90%;
+        height: 40px;
+        width: 80px;
+        border-radius: 32px 170px 28px 183px;
+        -moz-border-radius: 32px 170px 28px 183px;
+        -webkit-border-radius: 32px 170px 28px 183px;
+        border: 0px solid #000000;
+        color: white;
     }
     
 
