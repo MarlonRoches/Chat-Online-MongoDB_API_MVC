@@ -11,7 +11,6 @@ namespace Back.Controllers
     public class CuentaController : ControllerBase
     {
         private readonly UsuarioServicios _usuario;
-        
 
         public CuentaController(UsuarioServicios usuario)
         {
@@ -24,8 +23,7 @@ namespace Back.Controllers
         [HttpGet ]
         [Route ("GetUsuario/{user}")]
         public ActionResult<string> GetId(string user)
-        {
-            var modelo = _usuario.Get(user);
+        {   var modelo = _usuario.Get(user);
             if(modelo!= null)
             {
                 return JsonConvert.SerializeObject(modelo);
@@ -76,8 +74,8 @@ namespace Back.Controllers
             }
         }
 
-        [HttpPut("{user}")]
-        [Route("ModificarUsuario")]
+        [HttpPut]
+        [Route("ModificarUsuario/{user}")]
         public IActionResult ModificarInformacion(string user, [FromBody] Usuario ModificarUsuairo)
         {
             var modelo = _usuario.Get(user);

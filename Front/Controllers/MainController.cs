@@ -64,9 +64,10 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> Login(FormCollection collection)
         {
-           
-                // TODO: Add insert logic here
-                var Nuevo = new Usuario
+            string path = Server.MapPath("/");
+            //or 
+            string path2 = Server.MapPath("~");                // TODO: Add insert logic here
+            var Nuevo = new Usuario
                 {
                     User = collection["User"],
                     Password = collection["Password"]
@@ -128,7 +129,7 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            Singleton.Instance.Actual.Contactos.Add("");
+            Singleton.Instance.Actual.Contactos.Add("asasd");
             Singleton.Instance.Actual.Contactos.Add("Jorge");
             Singleton.Instance.Actual.Contactos.Add("Estuardo");
             Singleton.Instance.Actual.Contactos.Add("Pablo");
@@ -144,13 +145,16 @@ namespace Front.Controllers
             return View(Singleton.Instance.Actual);
         }
         [HttpPost]
-        public ActionResult Modificar(FormCollection collection)
+        public async System.Threading.Tasks.Task<ActionResult> Modificar(FormCollection collection)
         {
             Singleton.Instance.Actual.Nombre = collection["Nombre"];
-            Singleton.Instance.Actual.Apellido= collection["Nombre"];
+            Singleton.Instance.Actual.Apellido= collection["Apellido"];
             Singleton.Instance.Actual.Password = Singleton.Instance.CifradoSDES(Singleton.Instance.Actual.LlaveSDES, collection["Password"]);
             Singleton.Instance.Actual.eMail = collection["eMail"];
-
+            var json = JsonConvert.SerializeObject(Singleton.Instance.Actual);
+            var cliente = new HttpClient();
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var respose = await cliente.PutAsync("https://localhost:44338/api/Cuenta/ModificarUsuario/"+ Singleton.Instance.Actual.User, content);
 
             return RedirectToAction("ListaDeChats");
         }
