@@ -33,6 +33,22 @@ namespace Back.Controllers
                 return NotFound();
             }
         }
+        [HttpGet]
+        [Route ("VerificarUsuario/{user}")]
+        public bool VerificarUsuario(string user)
+        {
+            var modelo = _usuario.Get(user);
+            if(modelo == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
 
         [HttpPost]
         [Route("Login/{user}")]
