@@ -1,0 +1,27 @@
+﻿@model Back.Models.Usuario
+
+@{
+    ViewBag.Title = "ListaDeChats";
+}
+
+<h2>ListaDeChats</h2>
+<ul>
+    @foreach (var item in Model.Contactos)
+    {
+    <li>
+         @item 
+        <ul>
+            <li style="color:springgreen">
+        @Html.ActionLink("VerChat", "VerChat")
+
+            </li>
+            <li style="color: cadetblue">
+
+        @Html.ActionLink("Eliminar", "EliminarChat");
+                </li>
+        </ul>
+    </li>
+    }
+</ul>
+@Html.ActionLink("Modificar Datos", "Modificar");
+
