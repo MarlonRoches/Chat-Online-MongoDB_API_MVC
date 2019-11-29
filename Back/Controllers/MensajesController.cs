@@ -184,6 +184,20 @@ namespace Back.Controllers
                     return NoContent();
         }
 
+        [HttpDelete]
+        public IActionResult EliminarConversacion(string userCompuesto)
+        {
+            var modelo = _mensajes.Get(userCompuesto);
+            if(modelo!=null)
+            {
+                _mensajes.Remove(userCompuesto);
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
 
 

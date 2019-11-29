@@ -160,7 +160,35 @@ namespace Back.Controllers
 
         }
        
+        [HttpPut]
+        [Route("Eliminar contacto/{User}/{UserCompuesto}")]
+        public IActionResult EliminarContacto(string User, string UserCompuesto)
+        {
+            var modelo = _usuario.Get(User);
+            if(modelo!= null)
+            {
+                string[] eliminar = UserCompuesto.Split(",");
+
+                modelo.Contactos.Remove(eliminar[1]);
+                _usuario.Update(modelo.Id, modelo);
+                var Coneccion = new MensajesDatabaseSettings();
+                Coneccion.ConnectionString = "mongodb://localhost:27017";
+                Coneccion.DatabaseName = "Teules";
+                Coneccion.MensajeCollectionName = "mensajes";
+                var nuevo2 = new MensajesServicios(Coneccion);
+                var ModificarContactos = new MensajesController(nuevo2);
+                ModificarContactos.EliminarConversacion(UserCompuesto);
+                return NoContent();
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpDelete("{user}")]
+
         public IActionResult Delete(string user)
         {
             var modelo = _usuario.Get(user);
