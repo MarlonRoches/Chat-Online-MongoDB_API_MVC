@@ -12,7 +12,7 @@ namespace Back.Models
     public class CifradoJWT
     {
         public string Nombre { get; set; }
-        public string GenerateToken(string key, CifradoJWT json)
+        public string GenerateToken(string key, Usuario json)
         {
 
 
@@ -20,7 +20,8 @@ namespace Back.Models
             var crencial = new SigningCredentials(llaveSeguridad, SecurityAlgorithms.HmacSha256);
             var reclamo = new[]
             {
-                new Claim("usuario",json.Nombre)
+                new Claim("usuario",json.User),
+                new Claim("Contraseña",json.Password)
 
             };
 
