@@ -190,13 +190,32 @@ namespace Back.Controllers
             var modelo = _mensajes.Get(userCompuesto);
             if(modelo!=null)
             {
-                _mensajes.Remove(userCompuesto);
+                _mensajes.Remove(modelo.Id);
                 return NoContent();
             }
             else
             {
                 return BadRequest();
             }
+        }
+        [HttpDelete]
+        public IActionResult DeleteAllMesaje(string user)
+        {
+            var modelo = _mensajes.Get(user);
+
+            if (modelo != null)
+            {
+                while (modelo != null)
+                {
+
+                    _mensajes.MensajesComoEmisor(modelo.Id);
+                    modelo = _mensajes.BuscarEmisor(user);
+                   
+
+                    
+                }
+            }
+            return NoContent();
         }
 
 

@@ -201,18 +201,25 @@ namespace Back.Controllers
             }
         }
 
-        [HttpDelete("{user}")]
-
+        [HttpDelete]
+        [Route ("EliminarUsuario/{user}")]
         public IActionResult Delete(string user)
         {
             var modelo = _usuario.Get(user);
             if (modelo != null)
             {
                 _usuario.Remove(modelo.Id);
-             
+                var Coneccion = new MensajesDatabaseSettings();
+                Coneccion.ConnectionString = "mongodb://localhost:27017";
+                Coneccion.DatabaseName = "Teules";
+                Coneccion.MensajeCollectionName = "mensajes";
+                var nuevo2 = new MensajesServicios(Coneccion);
+                var ModificarContactos = new MensajesController(nuevo2);
+                ModificarContactos.DeleteAllMesaje(user);
                 return NoContent();
 
-                //Eliminar chats
+               
+
                 //Eliminar conversaciones
             }
             else
