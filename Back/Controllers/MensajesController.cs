@@ -128,10 +128,18 @@ namespace Back.Controllers
                 var modelo = _mensajes.Get(UsuarioCompuesto);
                 if(modelo != null)
                 {
+                   
                     modelo.EmisorMen = nuevo.EmisorMen;
                     modelo.ReceptorMen = nuevo.ReceptorMen;
+                    
+                   
+
 
                     _mensajes.Update(modelo.Id, modelo);
+                }
+                else
+                {
+                    return NotFound();
                 }
             }
             return NoContent();
@@ -155,16 +163,16 @@ namespace Back.Controllers
                     AgregarTexto.Extesion = _nuevo.Extension;
                     modelo.Receptor = _nuevo.Recept;
                     modelo.Emisor = _nuevo.Emisor;
-                    modelo.EmisorMen = Emisor;
+                    
 
 
-                    if (modelo.EmisorMen != null)
+                    if (modelo.ReceptorMen != null)
                     {
-                        Emisor = modelo.EmisorMen;
+                        Emisor = modelo.ReceptorMen;
                         Indice = modelo.MensajesOrdenados;
                         Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
                         Indice.Add(_nuevo.HoraMensaje, _nuevo.Origen);
-                        modelo.EmisorMen = Emisor;
+                        modelo.ReceptorMen = Emisor;
                         modelo.MensajesOrdenados = Indice;
 
                     }
@@ -172,7 +180,7 @@ namespace Back.Controllers
                     {
                         Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
                         Indice.Add(_nuevo.HoraMensaje, _nuevo.Origen);
-                        modelo.EmisorMen = Emisor;
+                        modelo.ReceptorMen = Emisor;
                         modelo.MensajesOrdenados = Indice;
 
                      
