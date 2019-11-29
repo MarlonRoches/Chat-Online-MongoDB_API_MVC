@@ -15,6 +15,7 @@ namespace Back.Controllers
     public class MensajesController : ControllerBase
     {
 
+
         #region Olvidado
 
         private readonly MensajesServicios _mensajes;
@@ -104,7 +105,7 @@ namespace Back.Controllers
                     Coneccion.UsuariosCollectionName = "usuarios";
                     UsuarioServicios nuevo2 = new UsuarioServicios(Coneccion);
                     CuentaController ModificarContactos = new CuentaController(nuevo2);
-                    ModificarContactos.ModificarContactos(_nuevo.Emisor, nuevo.Receptor);
+                    ModificarContactos.ModificarContactos(_nuevo.Recept, _nuevo.Emisor);
 
                     // ESTO ESTA BIEN
                 }
