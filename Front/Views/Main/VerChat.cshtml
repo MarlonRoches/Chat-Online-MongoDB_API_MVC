@@ -20,7 +20,7 @@
     @foreach (var item in Model.MensajesOrdenados)
     {
         <tr>
-            @if (Model.EmisorMen.ContainsKey(item.Key) == true || item.Value == false)
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true && item.Value == true)
             {
                 <td>
                     @Model.EmisorMen[item.Key].Texto
@@ -28,7 +28,7 @@
 
                 <td></td>
             }
-            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == true)
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == false)
             {
                 <td></td>
 

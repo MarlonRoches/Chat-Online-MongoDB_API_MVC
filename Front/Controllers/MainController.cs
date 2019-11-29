@@ -64,6 +64,9 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> Login(FormCollection collection)
         {
+            Singleton.Instance.Actual = new Usuario();
+            Singleton.Instance.ChatActual= new Mensaje();
+            Singleton.Instance.UsuarioActual = "";
             string path = Server.MapPath("/");
             //or 
             string path2 = Server.MapPath("~");                // TODO: Add insert logic here
@@ -186,6 +189,7 @@ namespace Front.Controllers
                     //var ChatExistente = new Mensaje();
 
                     var enviar = JsonConvert.DeserializeObject<Mensaje>(ChatExistente);
+                    Singleton.Instance.ChatActual = enviar;
                     // Singleton.Instance.ChatActual = ChatExistente;
                      return View(enviar);
                 }
@@ -206,32 +210,22 @@ namespace Front.Controllers
             
         }
         [HttpPost]
-        public async System.Threading.Tasks.Task VerChat(string Texto, string Emisor ,string recep, string extencion, string ruta)
+        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Texto, string Emisor ,string recep, string extencion, string ruta)
         {
+            var cliente = new HttpClient();
             var tiempo = DateTime.Now;
-            var NuevoObjeto = Singleton.Instance.Actual;
-            var Mensaje = new Mensaje
-            {
-                Emisor = Emisor,
-                Receptor = recep,
-                IDEmisorReceptor = $"{Emisor},{recep}",
-                EmisorMen = new Dictionary<string, Extesiones>(),
-                ReceptorMen = new Dictionary<string, Extesiones>(),
-                MensajesOrdenados = new Dictionary<string, bool>()
-            };
-            Mensaje.MensajesOrdenados.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", true);
+
+            Singleton.Instance.ChatActual.MensajesOrdenados.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", true);
             var exte = new Extesiones
             {
                 Texto = Texto,
                 Extesion = ""
             };
-            Mensaje.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}",exte);
-
-            var json = JsonConvert.SerializeObject(Mensaje);
-            var cliente = new HttpClient();
-            var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var EnviarAlRecp = new Receptor
+            
+            Singleton.Instance.ChatActual.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}",exte);
+            Singleton.Instance.ChatActual.IDEmisorReceptor = $"{Emisor},{recep}";
+            var json = JsonConvert.SerializeObject(Singleton.Instance.ChatActual);
+           var EnviarAlRecp = new Receptor
             {
                 HoraMensaje = $"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}",
                 Texto= Texto,
@@ -243,15 +237,18 @@ namespace Front.Controllers
             };
             var json2 = JsonConvert.SerializeObject(EnviarAlRecp);
 
-            var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
+
+            var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
             var lol = "https://localhost:44338/api/Mensajes/CrearConversacionEmisor";
             var MensajeAgregadoEmi = await cliente.PostAsync(lol, MensajePalEmisor);
+
+
+            var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
             lol = "https://localhost:44338/api/Mensajes/CrearConversacionReceptor";
             var MensajeAgregadoRecep = await cliente.PostAsync(lol, MensajePalReceptor);
 
-            
-            var DELETE = 0;
-        }
+            return View(Singleton.Instance.ChatActual);
+                }
         public ActionResult NuevoChat()
         {
 
