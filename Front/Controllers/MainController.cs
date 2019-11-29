@@ -132,10 +132,7 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            Singleton.Instance.Actual.Contactos.Add("SergioKun");
-            Singleton.Instance.Actual.Contactos.Add("Genesis");
-            Singleton.Instance.Actual.Contactos.Add("Estuardo");
-            Singleton.Instance.Actual.Contactos.Add("Pablo");
+            
            
             //Devolver
 
@@ -216,6 +213,7 @@ namespace Front.Controllers
             var tiempo = DateTime.Now;
 
             Singleton.Instance.ChatActual.MensajesOrdenados.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", true);
+
             var exte = new Extesiones
             {
                 Texto = Texto,

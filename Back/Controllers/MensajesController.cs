@@ -14,6 +14,9 @@ namespace Back.Controllers
     [ApiController]
     public class MensajesController : ControllerBase
     {
+
+        #region Olvidado
+
         private readonly MensajesServicios _mensajes;
 
         public MensajesController(MensajesServicios menServ)
@@ -71,6 +74,7 @@ namespace Back.Controllers
             }
             return NoContent();
         }
+        #endregion
         [HttpPost]
         [Route ("CrearConversacionReceptor")]
         public IActionResult PostReceptor([FromBody] Receptor _nuevo)
@@ -90,6 +94,7 @@ namespace Back.Controllers
                     nuevo.Emisor = _nuevo.Recept;
                     AgregarTexto.Texto = _nuevo.Texto;
                     AgregarTexto.Extesion = _nuevo.Extension;
+                    nuevo.MensajesOrdenados = Indice;
                     Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
                     nuevo.ReceptorMen= Emisor;
                     _mensajes.Create(nuevo);
@@ -100,6 +105,8 @@ namespace Back.Controllers
                     UsuarioServicios nuevo2 = new UsuarioServicios(Coneccion);
                     CuentaController ModificarContactos = new CuentaController(nuevo2);
                     ModificarContactos.ModificarContactos(_nuevo.Emisor, nuevo.Receptor);
+
+                    // ESTO ESTA BIEN
                 }
                 else
                 {
@@ -115,19 +122,11 @@ namespace Back.Controllers
 
 
 
-        public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)
-        {
-            MensajeNuevoEmisor(x, nuevo);
-        }
-        public void LlamadoCambiosAReceptor(string x, Receptor nuevo)
-        {
-            MensajeNuevoReceptor(x, nuevo);
-        }
         [HttpPut (Name = "ModEmisor")]
         [Route ("AgregarMensajeEmisor/{UsuarioCompuesto}")]
         public IActionResult MensajeNuevoEmisor(string UsuarioCompuesto, [FromBody] Mensaje nuevo)
         {
-            if(ModelState.IsValid)
+             if(ModelState.IsValid)
             {
                 
                 var modelo = _mensajes.Get(UsuarioCompuesto);
@@ -135,11 +134,8 @@ namespace Back.Controllers
                 {
                    
                     modelo.EmisorMen = nuevo.EmisorMen;
-                    modelo.ReceptorMen = nuevo.ReceptorMen;
+                    modelo.ReceptorMen = nuevo.ReceptorMen ;
                     modelo.MensajesOrdenados = nuevo.MensajesOrdenados;
-                   
-
-
                     _mensajes.Update(modelo.Id, modelo);
                 }
                 else
@@ -153,24 +149,19 @@ namespace Back.Controllers
         [Route("AgregarMensajeReceptor/{UsuarioCompuesto}")]
         public IActionResult MensajeNuevoReceptor(string UsuarioCompuesto, [FromBody] Receptor _nuevo)
         {
-
             if (ModelState.IsValid)
             {
-
                 var modelo = _mensajes.Get(UsuarioCompuesto);
                 if (modelo != null)
                 {
-                   
                     Extesiones AgregarTexto = new Extesiones();
                     Dictionary<string, Extesiones> Emisor = new Dictionary<string, Extesiones>();
                     Dictionary<string, bool> Indice = new Dictionary<string, bool>();
                     AgregarTexto.Texto = _nuevo.Texto;
                     AgregarTexto.Extesion = _nuevo.Extension;
-                    modelo.Receptor = _nuevo.Recept;
-                    modelo.Emisor = _nuevo.Emisor;
+                    modelo.Receptor = _nuevo.Emisor;
+                    modelo.Emisor = _nuevo.Recept;
                     
-
-
                     if (modelo.ReceptorMen != null)
                     {
                         Emisor = modelo.ReceptorMen;
@@ -179,29 +170,31 @@ namespace Back.Controllers
                         Indice.Add(_nuevo.HoraMensaje, _nuevo.Origen);
                         modelo.ReceptorMen = Emisor;
                         modelo.MensajesOrdenados = Indice;
-
                     }
                     else
                     {
                         Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
                         Indice.Add(_nuevo.HoraMensaje, _nuevo.Origen);
-                        modelo.ReceptorMen = Emisor;
+                        modelo.EmisorMen = Emisor;
                         modelo.MensajesOrdenados = Indice;
-
-                     
                     }
-                   
-                 
                     _mensajes.Update(modelo.Id, modelo);
                 }
             }
-        
                     return NoContent();
-
         }
 
 
 
+
+        public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)
+        {
+            MensajeNuevoEmisor(x, nuevo);
+        }
+        public void LlamadoCambiosAReceptor(string x, Receptor nuevo)
+        {
+            MensajeNuevoReceptor(x, nuevo);
+        }
 
 
 
