@@ -86,12 +86,12 @@ namespace Back.Controllers
                     Dictionary<string, bool> Indice = new Dictionary<string, bool>();
                     Indice.Add(_nuevo.HoraMensaje, _nuevo.Origen);
                     nuevo.IDEmisorReceptor = _nuevo.IDEmisorReceptor;
-                    nuevo.Receptor = _nuevo.Recept;
-                    nuevo.Emisor = _nuevo.Emisor;
+                    nuevo.Receptor = _nuevo.Emisor;
+                    nuevo.Emisor = _nuevo.Recept;
                     AgregarTexto.Texto = _nuevo.Texto;
                     AgregarTexto.Extesion = _nuevo.Extension;
                     Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
-                    nuevo.EmisorMen = Emisor;
+                    nuevo.ReceptorMen= Emisor;
                     _mensajes.Create(nuevo);
                     UsuariosDatabaseSettings Coneccion = new UsuariosDatabaseSettings();
                     Coneccion.ConnectionString = "mongodb://localhost:27017";
@@ -136,7 +136,7 @@ namespace Back.Controllers
                    
                     modelo.EmisorMen = nuevo.EmisorMen;
                     modelo.ReceptorMen = nuevo.ReceptorMen;
-                    
+                    modelo.MensajesOrdenados = nuevo.MensajesOrdenados;
                    
 
 
