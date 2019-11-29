@@ -171,16 +171,23 @@ namespace Back.Controllers
                 {
                     string[] eliminar = UserCompuesto.Split(",");
 
-                    modelo.Contactos.Remove(eliminar[1]);
-                    _usuario.Update(modelo.Id, modelo);
-                    var Coneccion = new MensajesDatabaseSettings();
-                    Coneccion.ConnectionString = "mongodb://localhost:27017";
-                    Coneccion.DatabaseName = "Teules";
-                    Coneccion.MensajeCollectionName = "mensajes";
-                    var nuevo2 = new MensajesServicios(Coneccion);
-                    var ModificarContactos = new MensajesController(nuevo2);
-                    ModificarContactos.EliminarConversacion(UserCompuesto);
-                    return NoContent();
+                    if (modelo.Contactos.Contains(eliminar[1]))
+                    {
+                        modelo.Contactos.Remove(eliminar[1]);
+                        _usuario.Update(modelo.Id, modelo);
+                        var Coneccion = new MensajesDatabaseSettings();
+                        Coneccion.ConnectionString = "mongodb://localhost:27017";
+                        Coneccion.DatabaseName = "Teules";
+                        Coneccion.MensajeCollectionName = "mensajes";
+                        var nuevo2 = new MensajesServicios(Coneccion);
+                        var ModificarContactos = new MensajesController(nuevo2);
+                        ModificarContactos.EliminarConversacion(UserCompuesto);
+                        return NoContent();
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
                 }
                 else
                 {
