@@ -165,6 +165,9 @@
     <Compile Include="..\Back\Models\Mensaje.cs">
       <Link>Models\Mensaje.cs</Link>
     </Compile>
+    <Compile Include="..\Back\Models\Receptor.cs">
+      <Link>Models\Receptor.cs</Link>
+    </Compile>
     <Compile Include="..\Back\Models\Usuario.cs">
       <Link>Models\Usuario.cs</Link>
     </Compile>
