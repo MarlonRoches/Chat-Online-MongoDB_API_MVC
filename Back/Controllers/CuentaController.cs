@@ -162,7 +162,7 @@ namespace Back.Controllers
        
         [HttpPut]
         [Route("Eliminarcontacto/{User}/{UserCompuesto}")]
-        public IActionResult EliminarContacto(string User, string UserCompuesto)
+        public IActionResult EliminarContacto(string User, string UserCompuesto, [FromBody] Usuario Vacio)
         {
             var modelo = _usuario.Get(User);
             if(modelo!= null)

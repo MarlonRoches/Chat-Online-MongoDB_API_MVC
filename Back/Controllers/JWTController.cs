@@ -13,15 +13,17 @@ namespace Back.Controllers
     public class JWTController : ControllerBase
     {
         private string JWTToken { get; set; }
-        [HttpPost("{key}", Name = "Cifrar")]
-        public ActionResult<string> post(String key, [FromBody] Usuario json )
+        [HttpPost]
+        public ActionResult<string> post([FromBody] Usuario json )
         {
+           
             try
             {
                 if (ModelState.IsValid)
                 {
                     var modelo = new CifradoJWT();
-                    key = key.PadLeft(20, '0');
+                    var key = json.Password;
+                    key = key.PadLeft(32, '0');
                     JWTToken = modelo.GenerateToken(key, json);
                     string token = JsonConvert.SerializeObject(JWTToken);
                     return token;
