@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Text;
 using Front.Models;
 using Back.Data;
+using System.Web.Routing;
 
 namespace Front.Controllers
 {
@@ -138,6 +139,21 @@ namespace Front.Controllers
 
             return View(Singleton.Instance.Actual);
         }
+        [HttpPost]
+        public ActionResult ListaDeChats(string UsuarioABuscar, string EmisorNuevo)
+        {
+
+
+
+
+
+            return RedirectToAction("VerChat", new RouteValueDictionary(new { Controller = "Main", Action = "VerChat", Emisor = EmisorNuevo, ReceptorRecibido = UsuarioABuscar }));
+
+
+
+
+        }
+
         public ActionResult Modificar()
         {
             Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES,Singleton.Instance.Actual.Password);  
@@ -158,13 +174,12 @@ namespace Front.Controllers
 
             return RedirectToAction("ListaDeChats");
         }
-
-        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Emisor, string Receptor)
+        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Emisor, string ReceptorRecibido)
         {
             var cliente = new HttpClient();
 
             //verificar usuario
-            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
+            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{ReceptorRecibido}";
             var respose = await cliente.GetAsync(uri);
 
             if (respose.ReasonPhrase == "Not Found") //No existe el usuario
@@ -173,24 +188,18 @@ namespace Front.Controllers
             }
             else
             {
-            uri = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
+            uri = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
             respose = await cliente.GetAsync(uri);
                 if (respose.ReasonPhrase == "OK")
                 {
-
                     //return conversacion que me devuelve el api
                     var clienteMensaje = new HttpClient();
-                    var lol = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
+                    var lol = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
                     var ChatExistente = await clienteMensaje.GetStringAsync(lol);
-
-                    //var ChatExistente = new Mensaje();
-
                     var enviar = JsonConvert.DeserializeObject<Mensaje>(ChatExistente);
                     Singleton.Instance.ChatActual = enviar;
-                    // Singleton.Instance.ChatActual = ChatExistente;
-
                     #region Decifrado
-                    uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Receptor;
+                    uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + ReceptorRecibido;
                     var Receptorn = await cliente.GetStringAsync(uri);
                     uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Emisor;
                     var usuarioEmisor = JsonConvert.DeserializeObject<Usuario>(await cliente.GetStringAsync(uri));
@@ -212,9 +221,6 @@ namespace Front.Controllers
                     var json = JsonConvert.SerializeObject(enviar);
                     var nuevo = JsonConvert.DeserializeObject<Mensaje>(json);
                     var devolver = DecifrarDiccionario(llaveTxt, nuevo);
-
-
-                    
                     return View(devolver);
                 }
                 else//no existe
@@ -224,7 +230,7 @@ namespace Front.Controllers
                     var NuevoChat = new Mensaje
                     {
                         Emisor = Emisor,
-                        Receptor= Receptor,
+                        Receptor= ReceptorRecibido,
                     };
                     Singleton.Instance.ChatActual = NuevoChat;
             return View(NuevoChat);
