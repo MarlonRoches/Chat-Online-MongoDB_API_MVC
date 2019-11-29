@@ -88,6 +88,7 @@ namespace Back.Controllers
                     nuevo.IDEmisorReceptor = _nuevo.IDEmisorReceptor;
                     nuevo.Receptor = _nuevo.Emisor;
                     nuevo.Emisor = _nuevo.Recept;
+                    nuevo.MensajesOrdenados = Indice;
                     AgregarTexto.Texto = _nuevo.Texto;
                     AgregarTexto.Extesion = _nuevo.Extension;
                     Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
@@ -123,6 +124,9 @@ namespace Back.Controllers
         {
             MensajeNuevoReceptor(x, nuevo);
         }
+
+
+
         [HttpPut (Name = "ModEmisor")]
         [Route ("AgregarMensajeEmisor/{UsuarioCompuesto}")]
         public IActionResult MensajeNuevoEmisor(string UsuarioCompuesto, [FromBody] Mensaje nuevo)
