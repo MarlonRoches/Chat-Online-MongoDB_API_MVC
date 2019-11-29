@@ -175,7 +175,7 @@ namespace Front.Controllers
             {
             uri = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
             respose = await cliente.GetAsync(uri);
-                if (respose.ReasonPhrase =="OK")
+                if (respose.ReasonPhrase == "OK")
                 {
 
                     //return conversacion que me devuelve el api
@@ -188,7 +188,34 @@ namespace Front.Controllers
                     var enviar = JsonConvert.DeserializeObject<Mensaje>(ChatExistente);
                     Singleton.Instance.ChatActual = enviar;
                     // Singleton.Instance.ChatActual = ChatExistente;
-                     return View(enviar);
+
+                    #region Decifrado
+                    uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Receptor;
+                    var Receptorn = await cliente.GetStringAsync(uri);
+                    uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Emisor;
+                    var usuarioEmisor = JsonConvert.DeserializeObject<Usuario>(await cliente.GetStringAsync(uri));
+                    var UsuarioReceptor = JsonConvert.DeserializeObject<Usuario>(Receptorn);
+                    #endregion
+                    #region CifradoDeMensaje
+
+                    var llaveTxt = usuarioEmisor.LlaveSDES + UsuarioReceptor.LlaveSDES;
+                    if (llaveTxt >= 1023)
+                    {
+                        llaveTxt /= 2;
+                        if (llaveTxt <= 512)
+                        {
+                            llaveTxt += 512;
+
+                        }
+                    }
+                    #endregion
+                    var json = JsonConvert.SerializeObject(enviar);
+                    var nuevo = JsonConvert.DeserializeObject<Mensaje>(json);
+                    var devolver = DecifrarDiccionario(llaveTxt, nuevo);
+
+
+                    
+                    return View(devolver);
                 }
                 else//no existe
                 {
@@ -209,28 +236,30 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> VerChat(string Recibido, string Emisor ,string recep, string extencion, string ruta)
         {
-            if ((Recibido =="" || Recibido == " "))
+            var devolver = new Mensaje();
+            if ((Recibido == "" || Recibido == " "))
             {
 
             }
             else
             {
                 var cliente = new HttpClient();
-                var uri = "https://localhost:44338/api/Cuenta/GetUsuario/" +  recep;
+
+                var uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + recep;
                 var Receptor = await cliente.GetStringAsync(uri);
-                uri = "https://localhost:44338/api/Cuenta/GetUsuario/" +  Emisor;
+                uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Emisor;
                 var usuarioEmisor = JsonConvert.DeserializeObject<Usuario>(await cliente.GetStringAsync(uri));
                 var UsuarioReceptor = JsonConvert.DeserializeObject<Usuario>(Receptor);
 
                 #region CifradoDeMensaje
 
-                var llaveTxt = usuarioEmisor.LlaveSDES +UsuarioReceptor.LlaveSDES;
+                var llaveTxt = usuarioEmisor.LlaveSDES + UsuarioReceptor.LlaveSDES;
                 if (llaveTxt >= 1023)
                 {
                     llaveTxt /= 2;
                     if (llaveTxt <= 512)
                     {
-                    llaveTxt += 512;
+                        llaveTxt += 512;
 
                     }
                 }
@@ -258,14 +287,21 @@ namespace Front.Controllers
                     Recept = recep,
                     IDEmisorReceptor = $"{recep},{Emisor}"
                 };
-                var json2 = JsonConvert.SerializeObject(EnviarAlRecp); var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
-                var lol = "https://localhost:44338/api/Mensajes/CrearConversacionEmisor";
-                var MensajeAgregadoEmi = await cliente.PostAsync(lol, MensajePalEmisor); var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
-                lol = "https://localhost:44338/api/Mensajes/CrearConversacionReceptor";
-                var MensajeAgregadoRecep = await cliente.PostAsync(lol, MensajePalReceptor);
-                //var devolver = 
+                var json2 = JsonConvert.SerializeObject(EnviarAlRecp);
+                var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
+                var Ruta = "https://localhost:44338/api/Mensajes/CrearConversacionEmisor";
+                var MensajeAgregadoEmi = await cliente.PostAsync(Ruta, MensajePalEmisor); var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
+                Ruta = "https://localhost:44338/api/Mensajes/CrearConversacionReceptor";
+                var MensajeAgregadoRecep = await cliente.PostAsync(Ruta, MensajePalReceptor);
+
+                var aux = JsonConvert.SerializeObject(Singleton.Instance.ChatActual);
+                var nuevo = JsonConvert.DeserializeObject<Mensaje>(aux);
+                devolver = DecifrarDiccionario(llaveTxt, nuevo);
+                
+
+
             }
-            return View(Singleton.Instance.ChatActual);
+            return View(devolver);
                 }
         public ActionResult NuevoChat()
         {
@@ -287,6 +323,22 @@ namespace Front.Controllers
         public ActionResult Obtener_Mensaje(string Texto)
         {
             return View();
+        }
+
+        public Mensaje DecifrarDiccionario(int llaveTxt, Mensaje Cifrado)
+        {
+            var devolver = Cifrado;
+            foreach (var item in devolver.EmisorMen.Keys.ToList())
+            {
+                var Decifrado = Singleton.Instance.DescifradoSDES(llaveTxt, devolver.EmisorMen[item].Texto);
+                devolver.EmisorMen[item].Texto = Decifrado;
+            }
+            foreach (var item in devolver.ReceptorMen.Keys.ToList())
+            {
+                var Decifrado = Singleton.Instance.DescifradoSDES(llaveTxt, devolver.ReceptorMen[item].Texto);
+                devolver.ReceptorMen[item].Texto = Decifrado;
+            }
+            return devolver;
         }
     }
 }
