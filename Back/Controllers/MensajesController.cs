@@ -30,7 +30,7 @@ namespace Back.Controllers
             var modelo = _mensajes.Get(userCompuesto);
             if(modelo!=null)
             {
-                return Ok(modelo);
+                return JsonConvert.SerializeObject(modelo);
             }
             else
             {
@@ -38,6 +38,9 @@ namespace Back.Controllers
 
             }
         }
+
+
+
         [HttpPost]
         [Route ("CrearConversacionEmisor")]
         public IActionResult post([FromBody] Mensaje _nuevo)
@@ -109,6 +112,8 @@ namespace Back.Controllers
             }
             return NoContent();
         }
+
+
 
         public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)
         {

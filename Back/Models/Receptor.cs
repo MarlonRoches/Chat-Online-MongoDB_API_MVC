@@ -14,7 +14,5 @@ namespace Back.Models
         public string Emisor { get; set; }
         public string Recept { get; set; }
         public string IDEmisorReceptor { get; set; }
-    
-
     }
 }

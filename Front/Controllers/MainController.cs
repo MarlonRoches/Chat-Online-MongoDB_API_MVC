@@ -177,25 +177,81 @@ namespace Front.Controllers
             respose = await cliente.GetAsync(uri);
                 if (respose.ReasonPhrase =="OK")
                 {
+
                     //return conversacion que me devuelve el api
-                    var ChatExistente = new Mensaje();
-                        return View(ChatExistente);
+                    var clienteMensaje = new HttpClient();
+                    var lol = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
+                    var ChatExistente = await clienteMensaje.GetStringAsync(lol);
+
+                    //var ChatExistente = new Mensaje();
+
+                    var enviar = JsonConvert.DeserializeObject<Mensaje>(ChatExistente);
+                    // Singleton.Instance.ChatActual = ChatExistente;
+                     return View(enviar);
                 }
                 else//no existe
                 {
                     //return nueva conversacion 
+
                     var NuevoChat = new Mensaje
                     {
                         Emisor = Emisor,
                         Receptor= Receptor,
                     };
+                    Singleton.Instance.ChatActual = NuevoChat;
             return View(NuevoChat);
 
                 }
             }
             
         }
+        [HttpPost]
+        public async System.Threading.Tasks.Task VerChat(string Texto, string Emisor ,string recep, string extencion, string ruta)
+        {
+            var tiempo = DateTime.Now;
+            var NuevoObjeto = Singleton.Instance.Actual;
+            var Mensaje = new Mensaje
+            {
+                Emisor = Emisor,
+                Receptor = recep,
+                IDEmisorReceptor = $"{Emisor},{recep}",
+                EmisorMen = new Dictionary<string, Extesiones>(),
+                ReceptorMen = new Dictionary<string, Extesiones>(),
+                MensajesOrdenados = new Dictionary<string, bool>()
+            };
+            Mensaje.MensajesOrdenados.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", true);
+            var exte = new Extesiones
+            {
+                Texto = Texto,
+                Extesion = ""
+            };
+            Mensaje.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}",exte);
 
+            var json = JsonConvert.SerializeObject(Mensaje);
+            var cliente = new HttpClient();
+            var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var EnviarAlRecp = new Receptor
+            {
+                HoraMensaje = $"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}",
+                Texto= Texto,
+                Extension = "",
+                Origen= false,
+                Emisor = Emisor,
+                Recept = recep,
+                IDEmisorReceptor= $"{recep},{Emisor}"
+            };
+            var json2 = JsonConvert.SerializeObject(EnviarAlRecp);
+
+            var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
+            var lol = "https://localhost:44338/api/Mensajes/CrearConversacionEmisor";
+            var MensajeAgregadoEmi = await cliente.PostAsync(lol, MensajePalEmisor);
+            lol = "https://localhost:44338/api/Mensajes/CrearConversacionReceptor";
+            var MensajeAgregadoRecep = await cliente.PostAsync(lol, MensajePalReceptor);
+
+            
+            var DELETE = 0;
+        }
         public ActionResult NuevoChat()
         {
 
@@ -213,7 +269,7 @@ namespace Front.Controllers
             return View();
         }
 
-        public ActionResult Tablas ()
+        public ActionResult Obtener_Mensaje(string Texto)
         {
             return View();
         }

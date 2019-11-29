@@ -5,6 +5,7 @@
 }
 
 <h2>@Model.Receptor</h2>
+<form  method="post">
 <table class="table">
     <tr>
         <th>
@@ -68,16 +69,20 @@
 
 
 
-<textarea id="Hola" placeholder="Mensaje..."></textarea>
-    <button id="Boton" type="button" style=" background-color:green" > Enviar </button>
+    <textarea placeholder="Mensaje..." type="text" name="Texto" id="txtMensaje"> </textarea>
+    <input type="hidden" name="Emisor" value="@Model.Emisor" />
+    <input type="hidden" name="recep" value="@Model.Receptor" />
+    <button id="Boton" type="submit" style=" background-color:green" > Enviar </button>
+
+</form>
 
 
 <style>
-    #Hola {
+    #txtMensaje {
         width: 800px;
-        position:fixed;
+        position: fixed;
         left: 15%;
-        top: 80%; 
+        top: 80%;
     }
     #Boton {
         position: fixed;
