@@ -26,7 +26,10 @@ namespace Back.Data
         {
             #region VariablesGlobales
             string index_p10 = "2416390875";
-            //string Index_PermutacionSeleccionada = "39860127";
+            //string Index_PermutacionSeleccionada = "39860127"; 
+
+
+            // AHAHAAH
             string index_p8 = "52637498";
             string index_p4 = "0321";
             string index_Expand = "13023201";
