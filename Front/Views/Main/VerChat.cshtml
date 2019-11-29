@@ -15,6 +15,7 @@
 
         <th>
             @Model.Receptor
+            
         </th>
     </tr>
     @foreach (var item in Model.MensajesOrdenados)
@@ -69,7 +70,7 @@
 
 
 
-    <textarea placeholder="Mensaje..." type="text" name="Texto" id="txtMensaje"> </textarea>
+    <textarea placeholder="Mensaje..." type="text" name="Recibido" id="txtMensaje"></textarea>
     <input type="hidden" name="Emisor" value="@Model.Emisor" />
     <input type="hidden" name="recep" value="@Model.Receptor" />
     <button id="Boton" type="submit" style=" background-color:green" > Enviar </button>
