@@ -18,7 +18,8 @@ namespace Back.Data
         }
 
         List<ListaContactos> ContactosActual = new List<ListaContactos>();
-        
+
+        public Mensaje ChatActual = new Mensaje();
         public  string UsuarioActual = "";
         public Usuario Actual = new Usuario();
         public string CifradoSDES(int LlaveDelUsuario, string Contraseña)

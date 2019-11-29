@@ -17,7 +17,7 @@ namespace Back.Models
         public string User { get; set; }
         public string eMail { get; set; }
         public int LlaveSDES { get; set; }
-        public List<string> Contactos { get; set; }
+        public List<string> Contactos = new List<string>();
 
     }
 }

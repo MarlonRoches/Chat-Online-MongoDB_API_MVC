@@ -55,7 +55,7 @@ namespace Front.Controllers
             var respose = await cliente.PostAsync("https://localhost:44338/api/Cuenta/Crear", content);
 
 
-            return View("Login");
+            return RedirectToAction("Login");
         }
         public ActionResult Login()
         {
@@ -64,6 +64,9 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> Login(FormCollection collection)
         {
+            Singleton.Instance.Actual = new Usuario();
+            Singleton.Instance.ChatActual= new Mensaje();
+            Singleton.Instance.UsuarioActual = "";
             string path = Server.MapPath("/");
             //or 
             string path2 = Server.MapPath("~");                // TODO: Add insert logic here
@@ -72,8 +75,8 @@ namespace Front.Controllers
                     User = collection["User"],
                     Password = collection["Password"]
                 };
-                //Cifrar Contraseña
-                
+            //Cifrar Contraseña
+            Singleton.Instance.UsuarioActual = collection["User"];
                 foreach (var item in Nuevo.User)
                 {
                     Nuevo.LlaveSDES+= (int)item;
@@ -129,10 +132,7 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            Singleton.Instance.Actual.Contactos.Add("asasd");
-            Singleton.Instance.Actual.Contactos.Add("Jorge");
-            Singleton.Instance.Actual.Contactos.Add("Estuardo");
-            Singleton.Instance.Actual.Contactos.Add("Pablo");
+            
            
             //Devolver
 
@@ -157,6 +157,136 @@ namespace Front.Controllers
             var respose = await cliente.PutAsync("https://localhost:44338/api/Cuenta/ModificarUsuario/"+ Singleton.Instance.Actual.User, content);
 
             return RedirectToAction("ListaDeChats");
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Emisor, string Receptor)
+        {
+            var cliente = new HttpClient();
+
+            //verificar usuario
+            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
+            var respose = await cliente.GetAsync(uri);
+
+            if (respose.ReasonPhrase == "Not Found") //No existe el usuario
+            {
+                return RedirectToAction("ListaDeChats");
+            }
+            else
+            {
+            uri = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
+            respose = await cliente.GetAsync(uri);
+                if (respose.ReasonPhrase =="OK")
+                {
+
+                    //return conversacion que me devuelve el api
+                    var clienteMensaje = new HttpClient();
+                    var lol = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{Receptor}";
+                    var ChatExistente = await clienteMensaje.GetStringAsync(lol);
+
+                    //var ChatExistente = new Mensaje();
+
+                    var enviar = JsonConvert.DeserializeObject<Mensaje>(ChatExistente);
+                    Singleton.Instance.ChatActual = enviar;
+                    // Singleton.Instance.ChatActual = ChatExistente;
+                     return View(enviar);
+                }
+                else//no existe
+                {
+                    //return nueva conversacion 
+
+                    var NuevoChat = new Mensaje
+                    {
+                        Emisor = Emisor,
+                        Receptor= Receptor,
+                    };
+                    Singleton.Instance.ChatActual = NuevoChat;
+            return View(NuevoChat);
+
+                }
+            }
+            
+        }
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Recibido, string Emisor ,string recep, string extencion, string ruta)
+        {
+            if ((Recibido =="" || Recibido == " "))
+            {
+
+            }
+            else
+            {
+                var cliente = new HttpClient();
+                var uri = "https://localhost:44338/api/Cuenta/GetUsuario/" +  recep;
+                var Receptor = await cliente.GetStringAsync(uri);
+                uri = "https://localhost:44338/api/Cuenta/GetUsuario/" +  Emisor;
+                var usuarioEmisor = JsonConvert.DeserializeObject<Usuario>(await cliente.GetStringAsync(uri));
+                var UsuarioReceptor = JsonConvert.DeserializeObject<Usuario>(Receptor);
+
+                #region CifradoDeMensaje
+
+                var llaveTxt = usuarioEmisor.LlaveSDES +UsuarioReceptor.LlaveSDES;
+                if (llaveTxt >= 1023)
+                {
+                    llaveTxt /= 2;
+                    if (llaveTxt <= 512)
+                    {
+                    llaveTxt += 512;
+
+                    }
+                }
+                Recibido = Singleton.Instance.CifradoSDES(llaveTxt, Recibido);
+                #endregion
+
+
+                var tiempo = DateTime.Now;
+                Singleton.Instance.ChatActual.MensajesOrdenados.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", true);
+                var exte = new Extesiones
+                {
+                    Texto = Recibido,
+                    Extesion = ""
+                };
+                Singleton.Instance.ChatActual.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", exte);
+                Singleton.Instance.ChatActual.IDEmisorReceptor = $"{Emisor},{recep}";
+                var json = JsonConvert.SerializeObject(Singleton.Instance.ChatActual);
+                var EnviarAlRecp = new Receptor
+                {
+                    HoraMensaje = $"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}",
+                    Texto = Recibido,
+                    Extension = "",
+                    Origen = false,
+                    Emisor = Emisor,
+                    Recept = recep,
+                    IDEmisorReceptor = $"{recep},{Emisor}"
+                };
+                var json2 = JsonConvert.SerializeObject(EnviarAlRecp); var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
+                var lol = "https://localhost:44338/api/Mensajes/CrearConversacionEmisor";
+                var MensajeAgregadoEmi = await cliente.PostAsync(lol, MensajePalEmisor); var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
+                lol = "https://localhost:44338/api/Mensajes/CrearConversacionReceptor";
+                var MensajeAgregadoRecep = await cliente.PostAsync(lol, MensajePalReceptor);
+                //var devolver = 
+            }
+            return View(Singleton.Instance.ChatActual);
+                }
+        public ActionResult NuevoChat()
+        {
+
+            return View();
+        }
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> NuevoChat(string Emisor, string Receptor)
+        {
+            var cliente = new HttpClient();
+
+
+            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
+            var respose = await cliente.GetAsync(uri);
+
+            return View();
+        }
+
+        public ActionResult Obtener_Mensaje(string Texto)
+        {
+            return View();
         }
     }
 }

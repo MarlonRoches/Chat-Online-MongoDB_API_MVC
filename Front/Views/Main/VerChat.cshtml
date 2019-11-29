@@ -1,0 +1,103 @@
+﻿@model Back.Models.Mensaje
+
+@{
+    ViewBag.Title = "VerChat";
+}
+
+<h2>@Model.Receptor</h2>
+<form  method="post">
+<table class="table">
+    <tr>
+        <th>
+            @Model.Emisor
+        </th>
+
+
+        <th>
+            @Model.Receptor
+            
+        </th>
+    </tr>
+    @foreach (var item in Model.MensajesOrdenados)
+    {
+        <tr>
+            @if (Model.EmisorMen.ContainsKey(item.Key) == true && item.Value == true)
+            {
+                <td>
+                    @Model.EmisorMen[item.Key].Texto
+                </td>
+
+                <td></td>
+            }
+            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == false)
+            {
+                <td></td>
+
+                <td>
+
+                    @Model.ReceptorMen[item.Key].Texto
+
+                </td>
+
+
+            }
+        </tr>
+    }
+
+   
+
+
+   
+
+
+   
+</table>
+.
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+.
+<br />
+.
+<br />
+
+
+
+    <textarea placeholder="Mensaje..." type="text" name="Recibido" id="txtMensaje"></textarea>
+    <input type="hidden" name="Emisor" value="@Model.Emisor" />
+    <input type="hidden" name="recep" value="@Model.Receptor" />
+    <button id="Boton" type="submit" style=" background-color:green" > Enviar </button>
+
+</form>
+
+
+<style>
+    #txtMensaje {
+        width: 800px;
+        position: fixed;
+        left: 15%;
+        top: 80%;
+    }
+    #Boton {
+        position: fixed;
+        left: 15%;
+        top: 90%;
+        height: 40px;
+        width: 80px;
+        border-radius: 32px 170px 28px 183px;
+        -moz-border-radius: 32px 170px 28px 183px;
+        -webkit-border-radius: 32px 170px 28px 183px;
+        border: 0px solid #000000;
+        color: white;
+    }
+    
+
+</style>
+
