@@ -219,6 +219,35 @@ namespace Back.Controllers
             return NoContent();
         }
 
+        [HttpPut]
+        [Route("BorrarMensaje/{UsuarioCompuesto}/{Usuario}/{Llave}")]
+        public IActionResult BorrarMensaje(string UsuarioCompuesto, string Usuario, string Llave)
+        {
+            var modelo = _mensajes.Get(UsuarioCompuesto);
+            if(modelo != null)
+            {
+                if(modelo.Emisor ==Usuario)
+                {
+                    modelo.EmisorMen.Remove(Llave);
+                }
+                else if(modelo.Receptor == Usuario)
+                {
+                    modelo.ReceptorMen.Remove(Llave);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                _mensajes.Update(modelo.Id, modelo);
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+            
+        }
+
 
 
         public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)
