@@ -153,7 +153,6 @@ namespace Front.Controllers
 
 
         }
-
         public ActionResult Modificar()
         {
             Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES,Singleton.Instance.Actual.Password);  
@@ -345,6 +344,27 @@ namespace Front.Controllers
                 devolver.ReceptorMen[item].Texto = Decifrado;
             }
             return devolver;
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> EliminarChat( string Emisor,string ReceptorRecibido)
+        {
+            var cliente = new HttpClient();
+            var json = JsonConvert.SerializeObject(new Usuario());
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var uri = "https://localhost:44338/api/Cuenta/Eliminarcontacto/" + Emisor +$"/{Emisor},{ReceptorRecibido}";
+            var summit = await cliente.PutAsync(uri,content);
+            return Redirect("ListaDeChats");
+        }
+
+
+        public ActionResult LogOut()
+        {
+            Singleton.Instance.Actual = new Usuario();
+            Singleton.Instance.ChatActual = new Mensaje();
+            Singleton.Instance.UsuarioActual = string.Empty;
+            Singleton.Instance.Log= false;
+            
+            return RedirectToAction("Login");
         }
     }
 }

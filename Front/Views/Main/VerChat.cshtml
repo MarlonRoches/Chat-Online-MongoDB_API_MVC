@@ -5,78 +5,85 @@
 }
 
 <h2>@Model.Receptor</h2>
-<form  method="post">
-<table class="table">
-    <tr>
-        <th>
-            @Model.Emisor
-        </th>
-
-
-        <th>
-            @Model.Receptor
-            
-        </th>
-    </tr>
-    @foreach (var item in Model.MensajesOrdenados)
-    {
+<form method="post">
+    <table class="table">
         <tr>
-            @if (Model.EmisorMen.ContainsKey(item.Key) == true && item.Value == true)
-            {
-                <td>
-                    @Model.EmisorMen[item.Key].Texto
-                </td>
-
-                <td></td>
-            }
-            else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == false)
-            {
-                <td></td>
-
-                <td>
-
-                    @Model.ReceptorMen[item.Key].Texto
-
-                </td>
+            <th>
+                @Model.Emisor
+            </th>
 
 
-            }
+            <th>
+                @Model.Receptor
+
+            </th>
         </tr>
-    }
+        @foreach (var item in Model.MensajesOrdenados)
+        {
+            <tr>
+                @if (Model.EmisorMen.ContainsKey(item.Key) == true && item.Value == true)
+                {
+                    <td width="50%">
+                        @Model.EmisorMen[item.Key].Texto
+                    </td>
 
-   
+                    <td width="50%" style=" max-height: 50% ">
+
+                    </td>
+                }
+                else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == false)
+                {
+                    <td width="50%" style=" max-height: 50% ">
+
+                    </td>
+
+                    <td width="50%" style=" max-height: 50% ">
+
+                        @Model.ReceptorMen[item.Key].Texto
+
+                    </td>
 
 
-   
+                }
+            </tr>
+        }
 
 
-   
-</table>
-.
 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-.
-<br />
-.
-<br />
+
+
+
+
+
+    </table>
+    .
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    .
+    <br />
+    .
+    <br />
 
 
 
     <textarea placeholder="Mensaje..." type="text" name="Recibido" id="txtMensaje"></textarea>
     <input type="hidden" name="Emisor" value="@Model.Emisor" />
     <input type="hidden" name="recep" value="@Model.Receptor" />
-    <button id="Boton" type="submit" style=" background-color:green" > Enviar </button>
+    <button id="Boton" type="submit" style=" background-color:green"> Enviar </button>
 
 </form>
 
+<h3 style=" color: brown">
+    @Html.ActionLink("Cerrar Sesion", "LogOut");
+</h3>
 
 <style>
     #txtMensaje {
@@ -85,6 +92,7 @@
         left: 15%;
         top: 80%;
     }
+
     #Boton {
         position: fixed;
         left: 15%;
@@ -97,7 +105,5 @@
         border: 0px solid #000000;
         color: white;
     }
-    
-
 </style>
 
