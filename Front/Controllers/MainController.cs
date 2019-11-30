@@ -429,7 +429,7 @@ namespace Front.Controllers
         }
         public ActionResult NuevoChat()
         {
-
+            //jajaj ste men
             return View();
         }
 
