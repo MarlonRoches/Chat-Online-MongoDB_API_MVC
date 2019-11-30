@@ -159,6 +159,7 @@ namespace Front.Controllers
 
             return View(Singleton.Instance.Actual);
         }
+
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> Modificar(FormCollection collection)
         {
@@ -173,6 +174,7 @@ namespace Front.Controllers
 
             return RedirectToAction("ListaDeChats");
         }
+
         public async System.Threading.Tasks.Task<ActionResult> VerChat(string Emisor, string ReceptorRecibido)
         {
             var cliente = new HttpClient();
@@ -238,6 +240,7 @@ namespace Front.Controllers
             }
             
         }
+
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> VerChat(string Recibido, string Emisor ,string recep, string extencion, string ruta)
         {
@@ -313,6 +316,7 @@ namespace Front.Controllers
 
             return View();
         }
+
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> NuevoChat(string Emisor, string Receptor)
         {
@@ -355,7 +359,6 @@ namespace Front.Controllers
             var summit = await cliente.PutAsync(uri,content);
             return Redirect("ListaDeChats");
         }
-
 
         public ActionResult LogOut()
         {
