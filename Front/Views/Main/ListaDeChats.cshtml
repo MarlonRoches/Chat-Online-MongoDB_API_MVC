@@ -8,21 +8,57 @@
 <ul>
     @foreach (var item in Model.Contactos)
     {
-    <li>
-         @item 
-        <ul>
-            <li style="color:springgreen">
-        @Html.ActionLink("Ver Chat", "VerChat", new { Emisor = Model.User, Receptor = item})
-
-            </li>
-            <li style="color: cadetblue">
-
-        @Html.ActionLink("Eliminar Chat", "EliminarChat", new { Emisor = Model.User, Receptor = item })
+        <li>
+            @item
+            <ul>
+                <li style="color:springgreen">
+                    @Html.ActionLink("Ver Chat", "VerChat", new { Emisor = Model.User, ReceptorRecibido = item })
 
                 </li>
-        </ul>
-    </li>
+                <li style="color: cadetblue">
+
+                    @Html.ActionLink("Eliminar Chat", "EliminarChat", new { Emisor = Model.User, ReceptorRecibido = item })
+
+                </li>
+            </ul>
+        </li>
     }
 </ul>
+
+<form method="post">
+
+    <input type="text" id="txtMensaje"  name="UsuarioABuscar" autofocus placeholder="Busque Un Usuario" />
+    <input type="hidden" id="txtMensaje"  name="EmisorNuevo" placeholder="Busque Un Usuario"  value="@Model.User"/>
+    <button id="Boton" type="submit" style=" background-color:cyan"> Enviar </button>
+
+</form>
+
+<style>
+    #txtMensaje {
+        width: 800px;
+        left: 70%;
+        top: 15%;
+        position:fixed;
+    }
+
+    #Boton {
+        position: fixed;
+        height: 40px;
+        width: 80px;
+        border-radius: 32px 170px 28px 183px;
+        -moz-border-radius: 32px 170px 28px 183px;
+        -webkit-border-radius: 32px 170px 28px 183px;
+        border: 0px solid #000000;
+        left: 90%;
+        top: 15%;
+        color: black;
+    }
+</style>
+
+
 @Html.ActionLink("Modificar Datos", "Modificar");
+
+<h3 style=" color: brown">
+@Html.ActionLink("Cerrar Sesion", "LogOut");
+</h3>
 

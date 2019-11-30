@@ -40,6 +40,21 @@ namespace Back.Servicios
         {
             _Mensajes.DeleteOne(Men => Men.Id == id);
         }
+        public void MensajesComoEmisor(string id)
+        {
+
+            _Mensajes.FindOneAndDelete(_men => _men.Emisor == id);
+           
+        }
+        public Mensaje BuscarEmisor(string id)
+        {
+            return _Mensajes.Find<Mensaje>(_men => _men.Emisor == id).FirstOrDefault();
+        }
+        public List<Mensaje> BuscadorLike(string id)
+        {
+         return   _Mensajes.Find(x => x.Emisor == id).ToList();
+        }
+
     }
 
 }

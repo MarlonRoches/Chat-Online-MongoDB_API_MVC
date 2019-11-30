@@ -15,6 +15,7 @@ namespace Back.Controllers
     public class MensajesController : ControllerBase
     {
 
+
         #region Olvidado
 
         private readonly MensajesServicios _mensajes;
@@ -31,7 +32,7 @@ namespace Back.Controllers
         public ActionResult<string> GetId(string userCompuesto)
         {
             var modelo = _mensajes.Get(userCompuesto);
-            if(modelo!=null)
+            if (modelo != null)
             {
                 return JsonConvert.SerializeObject(modelo);
             }
@@ -45,7 +46,7 @@ namespace Back.Controllers
 
 
         [HttpPost]
-        [Route ("CrearConversacionEmisor")]
+        [Route("CrearConversacionEmisor")]
         public IActionResult post([FromBody] Mensaje _nuevo)
         {
             if (ModelState.IsValid)
@@ -53,7 +54,7 @@ namespace Back.Controllers
                 var modelo = _mensajes.Get(_nuevo.IDEmisorReceptor);
                 if (modelo == null)
                 {
-                   
+
                     _mensajes.Create(_nuevo);
                     UsuariosDatabaseSettings nuevo = new UsuariosDatabaseSettings();
                     nuevo.ConnectionString = "mongodb://localhost:27017";
@@ -67,16 +68,19 @@ namespace Back.Controllers
                 {
                     LlamadoCambiosAEmisor(modelo.IDEmisorReceptor, _nuevo);
                 }
-             
-              
+
+
 
 
             }
             return NoContent();
         }
         #endregion
+
+      
+
         [HttpPost]
-        [Route ("CrearConversacionReceptor")]
+        [Route("CrearConversacionReceptor")]
         public IActionResult PostReceptor([FromBody] Receptor _nuevo)
         {
             if (ModelState.IsValid)
@@ -96,7 +100,7 @@ namespace Back.Controllers
                     AgregarTexto.Extesion = _nuevo.Extension;
                     nuevo.MensajesOrdenados = Indice;
                     Emisor.Add(_nuevo.HoraMensaje, AgregarTexto);
-                    nuevo.ReceptorMen= Emisor;
+                    nuevo.ReceptorMen = Emisor;
                     _mensajes.Create(nuevo);
                     UsuariosDatabaseSettings Coneccion = new UsuariosDatabaseSettings();
                     Coneccion.ConnectionString = "mongodb://localhost:27017";
@@ -104,7 +108,7 @@ namespace Back.Controllers
                     Coneccion.UsuariosCollectionName = "usuarios";
                     UsuarioServicios nuevo2 = new UsuarioServicios(Coneccion);
                     CuentaController ModificarContactos = new CuentaController(nuevo2);
-                    ModificarContactos.ModificarContactos(_nuevo.Emisor, nuevo.Receptor);
+                    ModificarContactos.ModificarContactos(_nuevo.Recept, _nuevo.Emisor);
 
                     // ESTO ESTA BIEN
                 }
@@ -122,19 +126,19 @@ namespace Back.Controllers
 
 
 
-        [HttpPut (Name = "ModEmisor")]
-        [Route ("AgregarMensajeEmisor/{UsuarioCompuesto}")]
+        [HttpPut(Name = "ModEmisor")]
+        [Route("AgregarMensajeEmisor/{UsuarioCompuesto}")]
         public IActionResult MensajeNuevoEmisor(string UsuarioCompuesto, [FromBody] Mensaje nuevo)
         {
-             if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                
+
                 var modelo = _mensajes.Get(UsuarioCompuesto);
-                if(modelo != null)
+                if (modelo != null)
                 {
-                   
+
                     modelo.EmisorMen = nuevo.EmisorMen;
-                    modelo.ReceptorMen = nuevo.ReceptorMen ;
+                    modelo.ReceptorMen = nuevo.ReceptorMen;
                     modelo.MensajesOrdenados = nuevo.MensajesOrdenados;
                     _mensajes.Update(modelo.Id, modelo);
                 }
@@ -161,7 +165,7 @@ namespace Back.Controllers
                     AgregarTexto.Extesion = _nuevo.Extension;
                     modelo.Receptor = _nuevo.Emisor;
                     modelo.Emisor = _nuevo.Recept;
-                    
+
                     if (modelo.ReceptorMen != null)
                     {
                         Emisor = modelo.ReceptorMen;
@@ -181,10 +185,126 @@ namespace Back.Controllers
                     _mensajes.Update(modelo.Id, modelo);
                 }
             }
-                    return NoContent();
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public IActionResult EliminarConversacion(string userCompuesto)
+        {
+            var modelo = _mensajes.Get(userCompuesto);
+            if (modelo != null)
+            {
+                _mensajes.Remove(modelo.Id);
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteAllMesaje(string user)
+        {
+            var modelo = _mensajes.Get(user);
+
+            if (modelo != null)
+            {
+                while (modelo != null)
+                {
+
+                    _mensajes.MensajesComoEmisor(modelo.Id);
+                    modelo = _mensajes.BuscarEmisor(user);
+
+
+
+                }
+            }
+            return NoContent();
+        }
+
+        [HttpPut]
+        [Route("BorrarMensaje/{UsuarioCompuesto}/{Usuario}/{Llave}")]
+        public IActionResult BorrarMensaje(string UsuarioCompuesto, string Usuario, string Llave)
+        {
+            var modelo = _mensajes.Get(UsuarioCompuesto);
+            if (modelo != null)
+            {
+                if (modelo.Emisor == Usuario)
+                {
+                    modelo.EmisorMen.Remove(Llave);
+                }
+                else if (modelo.Receptor == Usuario)
+                {
+                    modelo.ReceptorMen.Remove(Llave);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                _mensajes.Update(modelo.Id, modelo);
+
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
 
+        [HttpGet]
+        [Route("BuscadorLike/{Emisor}}")]
+        public ActionResult<string> BuscadorLike(string UsuarioCompuesto, string Emisor, [FromBody] Extesiones TextoABuscar)
+        {
+            var Buscador = new Dictionary<string, Extesiones>();
+            var modelo = _mensajes.BuscadorLike(Emisor);
+            string agregar;
+            if (modelo!= null)
+            {
+                foreach(var item in modelo)
+                {
+                    if (item.EmisorMen.ContainsValue(TextoABuscar))
+                    {
+   
+                        foreach (var item2 in item.EmisorMen)
+                        {
+                            agregar = $"{item.Receptor},{item2.Key}";
+                            Buscador.Add(agregar, item2.Value);
+                        }
+                    }
+                    if(item.ReceptorMen.ContainsValue(TextoABuscar))
+                    {
+                        foreach (var item2 in item.ReceptorMen)
+                        {
+                            agregar = $"{item.Receptor},{item2.Key}";
+                            Buscador.Add(agregar, item2.Value);
+                        }
+                    }
+          
+
+                }
+                if (Buscador != null)
+                {
+                    var json = JsonConvert.SerializeObject(Buscador);
+                    return json;
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+
+           
+        }
+
+    
 
 
         public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)
