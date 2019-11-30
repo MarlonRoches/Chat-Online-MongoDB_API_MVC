@@ -7,15 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Back.Models;
 using Back.Servicios;
 using Newtonsoft.Json;
-
+using Back.Data;
 namespace Back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class MensajesController : ControllerBase
     {
-
-
         #region Olvidado
 
         private readonly MensajesServicios _mensajes;
@@ -253,41 +251,72 @@ namespace Back.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPut]
         [Route("BuscadorLike/{Emisor}")]
-        public ActionResult<string> BuscadorLike(string UsuarioCompuesto, string Emisor, [FromBody] Extesiones TextoABuscar)
+        public ActionResult<string> BuscadorLike(string Emisor, [FromBody] Extesiones TextoABuscar)
         {
             var Buscador = new Dictionary<string, Extesiones>();
+            Extesiones prueba = new Extesiones();
             var modelo = _mensajes.BuscadorLike(Emisor);
             string agregar;
-            if (modelo!= null)
+            if (modelo != null)
             {
-                foreach(var item in modelo)
+                foreach (var item in modelo)
                 {
-                    if (item.EmisorMen.ContainsValue(TextoABuscar))
+
+                    var LlaveEmisor = 0;
+                    var LlaveReceptor = 0;
+                    foreach (var caracteritem in item.Emisor)
                     {
-   
-                        foreach (var item2 in item.EmisorMen)
+                        LlaveEmisor += caracteritem;
+                    }
+
+                    foreach (var caracteritem in item.Receptor)
+                    {
+                        LlaveReceptor += caracteritem;
+                    }
+                    var llaveTxt = LlaveEmisor + LlaveReceptor;
+                        TextoABuscar.Texto = Singleton.Instance.DescifradoSDES(int.Parse(TextoABuscar.Extesion), TextoABuscar.Texto).ToLower();
+                    if (llaveTxt >= 1023)
+                    {
+                        llaveTxt /= 2;
+                        if (llaveTxt <= 512)
+                        {
+                            llaveTxt += 512;
+
+                        }
+                    }
+                    foreach (var item2 in item.EmisorMen)
+                    {
+                        prueba = item.EmisorMen[item2.Key];
+
+                        prueba.Texto = Singleton.Instance.DescifradoSDES(llaveTxt, prueba.Texto).ToLower();
+                        if (prueba.Texto.ToLower() == TextoABuscar.Texto.ToLower())
                         {
                             agregar = $"{item.Receptor},{item2.Key}";
                             Buscador.Add(agregar, item2.Value);
                         }
                     }
-                    if(item.ReceptorMen.ContainsValue(TextoABuscar))
+
+
+                    foreach (var item2 in item.ReceptorMen)
                     {
-                        foreach (var item2 in item.ReceptorMen)
+                        prueba = item.ReceptorMen[item2.Key];
+                        prueba.Texto = Singleton.Instance.DescifradoSDES(llaveTxt, prueba.Texto).ToLower();
+                        if (prueba.Texto == TextoABuscar.Texto)
                         {
                             agregar = $"{item.Receptor},{item2.Key}";
                             Buscador.Add(agregar, item2.Value);
                         }
                     }
-          
+
+
 
                 }
                 if (Buscador != null)
                 {
                     var json = JsonConvert.SerializeObject(Buscador);
-                    return json;
+                    return Ok(json);
                 }
                 else
                 {
@@ -301,10 +330,9 @@ namespace Back.Controllers
             }
 
 
-           
+
         }
 
-    
 
 
         public void LlamadoCambiosAEmisor(string x, Mensaje nuevo)

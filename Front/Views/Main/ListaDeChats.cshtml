@@ -27,9 +27,15 @@
 
 <form method="post">
 
-    <input type="text" id="txtMensaje"  name="UsuarioABuscar" autofocus placeholder="Busque Un Usuario" />
-    <input type="hidden" id="txtMensaje"  name="EmisorNuevo" placeholder="Busque Un Usuario"  value="@Model.User"/>
-    <button id="Boton" type="submit" style=" background-color:cyan"> Enviar </button>
+    <input type="text" id="txtMensaje" name="UsuarioABuscar" autofocus placeholder="Busque Un Usuario" />
+    <input type="hidden" id="txtMensaje" name="EmisorNuevo" placeholder="Busque Un Usuario" value="@Model.User" />
+    <button id="Boton" type="submit" style=" background-color:cyan">Buscar Usuario</button>
+
+
+    <input type="text" id="txtLike" name="txtLiker" autofocus placeholder="Buscador Like" />
+    <input type="hidden" id="txtLike" name="EmisorLike" placeholder="Busque Un Usuario" value="@Model.User" />
+    <input type="hidden" id="txtLike" name="sdeesLike" placeholder="Busque Un Usuario" value="@Model.LlaveSDES" />
+    <button id="BotonLike" type="submit" style=" background-color:red">Buscar</button>
 
 </form>
 
@@ -38,13 +44,13 @@
         width: 800px;
         left: 70%;
         top: 15%;
-        position:fixed;
+        position: fixed;
     }
 
     #Boton {
         position: fixed;
         height: 40px;
-        width: 80px;
+        width:120px;
         border-radius: 32px 170px 28px 183px;
         -moz-border-radius: 32px 170px 28px 183px;
         -webkit-border-radius: 32px 170px 28px 183px;
@@ -53,12 +59,31 @@
         top: 15%;
         color: black;
     }
+
+
+    #txtLike {
+        width: 800px;
+        left: 70%;
+        top: 20%;
+        position: fixed;
+    }
+
+    #BotonLike {
+        position: fixed;
+        height: 40px;
+        width: 80px;
+        border-radius: 32px 170px 28px 183px;
+        -moz-border-radius: 32px 170px 28px 183px;
+        -webkit-border-radius: 32px 170px 28px 183px;
+        border: 0px solid #000000;
+        left: 90%;
+        top: 20%;
+        color: black;
+    }
 </style>
 
 
-@Html.ActionLink("Modificar Datos", "Modificar");
 
 <h3 style=" color: brown">
-@Html.ActionLink("Cerrar Sesion", "LogOut");
+@Html.ActionLink("Modificar Datos", "Modificar") |  |@Html.ActionLink("Cerrar Sesion", "LogOut")|   |@Html.ActionLink("Eliminar Perfil", "EliminarUsuario", new { UsuarioAEliminar = Model.User });
 </h3>
-

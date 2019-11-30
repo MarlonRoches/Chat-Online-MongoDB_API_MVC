@@ -17,7 +17,6 @@ namespace Front.Controllers
 {
     public class MainController : Controller
     {
-
         HttpClient ClienteHttp = new HttpClient();
 
         public ActionResult CrearUsuario()
@@ -27,6 +26,7 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> CrearUsuario(FormCollection collection)
         {
+        string URL = Request.Url.AbsoluteUri;
 
             // TODO: Add insert logic here
             var Nuevo = new Usuario
@@ -141,19 +141,59 @@ namespace Front.Controllers
             return View(Singleton.Instance.Actual);
         }
         [HttpPost]
-        public ActionResult ListaDeChats(string UsuarioABuscar, string EmisorNuevo)
+        public async System.Threading.Tasks.Task<ActionResult> ListaDeChats(string UsuarioABuscar, string EmisorNuevo,string txtLiker, string EmisorLike, string sdeesLike)
         {
 
-
-
-
+            if (UsuarioABuscar != "")
+            {
 
             return RedirectToAction("VerChat", new RouteValueDictionary(new { Controller = "Main", Action = "VerChat", Emisor = EmisorNuevo, ReceptorRecibido = UsuarioABuscar }));
+            }
+            else
+            {
+            txtLiker = Singleton.Instance.CifradoSDES(int.Parse(sdeesLike), txtLiker);
+                var cliente = new HttpClient();
+                var Uri = "https://localhost:44313/api/Mensajes/BuscadorLike/" + EmisorLike;
+                var ext = new Extesiones
+                {
+                    Texto = txtLiker,
+                    Extesion = sdeesLike
+                };
+                var json = JsonConvert.SerializeObject(ext);
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var respo = await cliente.PutAsync(Uri, content);
+
+                var Resultado =JsonConvert.DeserializeObject<Dictionary<string,Extesiones>>( await respo.Content.ReadAsStringAsync());
+                foreach (var item in Resultado.Keys)
+                {
+                    item.Replace("|","/");
+                }
+                Singleton.Instance.DiccionarioResultadoLike = Resultado;
+                return RedirectToAction("ResultadosLike");
+
+            }
+
 
 
 
 
         }
+
+        public ActionResult ResultadosLike()
+        {
+            Singleton.Instance.Resulta.Fechas =Singleton.Instance.DiccionarioResultadoLike.Keys.ToList();
+            Singleton.Instance.Resulta.Mensajes = new List<string>();
+            foreach (var item in Singleton.Instance.DiccionarioResultadoLike.Values)
+            {
+                Singleton.Instance.Resulta.Mensajes.Add(item.Texto);
+            }
+            return View( Singleton.Instance.Resulta);
+        }
+
+
+
+
         public ActionResult Modificar()
         {
             Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES, Singleton.Instance.Actual.Password);
@@ -362,12 +402,18 @@ namespace Front.Controllers
 
 
                 var lector = new StreamReader(RutaArchivo);
-                var TexoPlano = Singleton.Instance.CifradoSDES(llaveTxt, lector.ReadToEnd());
+                var linea= lector.ReadLine();
+                var cifrado = string.Empty; 
+                while (linea != null)
+                {
+                    cifrado += Singleton.Instance.CifradoSDES(llaveTxt, linea);
+                }
+                
                 var exten = Path.GetExtension(RutaArchivo);
 
                 var exte = new Extesiones
                 {
-                    Texto = TexoPlano,
+                    Texto = cifrado,
                     Extesion = exten
                 };
                 Singleton.Instance.ChatActual.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", exte);
@@ -429,7 +475,7 @@ namespace Front.Controllers
         }
         public ActionResult NuevoChat()
         {
-
+            //jajaj ste men
             return View();
         }
 
@@ -484,6 +530,34 @@ namespace Front.Controllers
             Singleton.Instance.Log = false;
 
             return RedirectToAction("Login");
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
+        {
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Cuenta/EliminarUsuario/" + UsuarioAEliminar;
+            var response = await cliente.DeleteAsync(uri);
+            return RedirectToAction("LogOut");
+        }
+
+
+        public async System.Threading.Tasks.Task<ActionResult> ParaMi(string Usuario, string Llave, string Lado)
+        {
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{Usuario}/{Lado}/{Llave}";
+            var response = await cliente.PutAsync(uri, null);
+            return RedirectToAction("ListaDeChats");
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> ParaTodos(string Usuario, string Llave, string Lado)
+        {
+            var array = Usuario.Split(',');
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{array[0]},{array[1]}/{array[0]}/{Llave}";
+            var response = await cliente.PutAsync(uri, null);
+            uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{array[1]},{array[0]}/{array[1]}/{Llave}";
+            response = await cliente.PutAsync(uri, null);
+            return RedirectToAction("ListaDeChats");
         }
     }
 }
