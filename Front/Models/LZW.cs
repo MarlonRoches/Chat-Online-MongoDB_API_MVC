@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LZW
+namespace Front.Models
 {
     public class LZW
     {

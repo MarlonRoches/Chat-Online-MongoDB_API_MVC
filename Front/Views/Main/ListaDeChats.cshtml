@@ -57,6 +57,7 @@
 
 
 @Html.ActionLink("Modificar Datos", "Modificar");
+@Html.ActionLink("Eliminar Perfil", "EliminarUsuario", new { UsuarioAEliminar = Model.User});
 
 <h3 style=" color: brown">
 @Html.ActionLink("Cerrar Sesion", "LogOut");

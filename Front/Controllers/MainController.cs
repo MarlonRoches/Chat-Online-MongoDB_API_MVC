@@ -361,16 +361,27 @@ namespace Front.Controllers
                 Singleton.Instance.ChatActual.MensajesOrdenados.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", true);
 
 
-                var lector = new StreamReader(RutaArchivo);
-                var TexoPlano = Singleton.Instance.CifradoSDES(llaveTxt, lector.ReadToEnd());
-                var exten = Path.GetExtension(RutaArchivo);
+                //var lector = new StreamReader(RutaArchivo);
+                //var Descomprimido = lector.ReadToEnd();
+                //var Cifrado = "";
+                //var objlz = new LZW();
+                //var comprimido = objlz.Comprimir(Descomprimido);
+                //Buffer
+                //while (linea!=null)
+                //{
+                //    Cifrado += Singleton.Instance.CifradoSDES(llaveTxt, linea);
 
-                var exte = new Extesiones
-                {
-                    Texto = TexoPlano,
-                    Extesion = exten
-                };
-                Singleton.Instance.ChatActual.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", exte);
+                //    linea = lector.ReadLine();
+                //}
+                //var exten = Path.GetExtension(RutaArchivo);
+
+                //var exte = new Extesiones
+                //{
+                //    Texto = Cifrado,
+                //    Extesion = exten
+                //};
+                //Singleton.Instance.ChatActual.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", exte);
+
                 Singleton.Instance.ChatActual.IDEmisorReceptor = $"{Emisor},{recep}";
                 var json = JsonConvert.SerializeObject(Singleton.Instance.ChatActual);
                 var EnviarAlRecp = new Receptor
@@ -485,5 +496,23 @@ namespace Front.Controllers
 
             return RedirectToAction("Login");
         }
+        public string CifrarArchivo(StreamReader Archivo)
+        {
+            return "";
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
+        {
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Cuenta/"+ UsuarioAEliminar;
+            var response = await cliente.DeleteAsync(uri);
+            return View();
+        }
+
+        //[HttpPost]
+        //public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
+        //{
+        //}
+
     }
 }
