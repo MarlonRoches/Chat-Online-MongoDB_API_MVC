@@ -25,6 +25,7 @@
                 {
                     <td width="50%">
                         @Model.EmisorMen[item.Key].Texto
+                        <p> @Html.ActionLink("Eliminar","ParaMi", new { Usuario = Model.IDEmisorReceptor , Llave = item.Key, Lado = Model.Emisor });</p>
                     </td>
 
                     <td width="50%" style=" max-height: 50% ">
@@ -40,6 +41,7 @@
                     <td width="50%" style=" max-height: 50% ">
 
                         @Model.ReceptorMen[item.Key].Texto
+                        <p> @Html.ActionLink("Eliminar","ParaMi", new { Usuario = Model.IDEmisorReceptor , Llave = item.Key, Lado = Model.Receptor });</p>
 
                     </td>
 

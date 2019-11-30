@@ -27,8 +27,8 @@
 
 <form method="post">
 
-    <input type="text" id="txtMensaje"  name="UsuarioABuscar" autofocus placeholder="Busque Un Usuario" />
-    <input type="hidden" id="txtMensaje"  name="EmisorNuevo" placeholder="Busque Un Usuario"  value="@Model.User"/>
+    <input type="text" id="txtMensaje" name="UsuarioABuscar" autofocus placeholder="Busque Un Usuario" />
+    <input type="hidden" id="txtMensaje" name="EmisorNuevo" placeholder="Busque Un Usuario" value="@Model.User" />
     <button id="Boton" type="submit" style=" background-color:cyan"> Enviar </button>
 
 </form>
@@ -38,7 +38,7 @@
         width: 800px;
         left: 70%;
         top: 15%;
-        position:fixed;
+        position: fixed;
     }
 
     #Boton {
@@ -57,8 +57,8 @@
 
 
 @Html.ActionLink("Modificar Datos", "Modificar");
+@Html.ActionLink("Eliminar Perfil", "EliminarUsuario", new { UsuarioAEliminar = Model.User });
 
 <h3 style=" color: brown">
-@Html.ActionLink("Cerrar Sesion", "LogOut");
+    @Html.ActionLink("Cerrar Sesion", "LogOut");
 </h3>
-

@@ -20,10 +20,14 @@ namespace Back.Data
         List<ListaContactos> ContactosActual = new List<ListaContactos>();
 
         public bool Log = false;
-
         public Mensaje ChatActual = new Mensaje();
         public  string UsuarioActual = "";
         public Usuario Actual = new Usuario();
+        public void GetUsri()
+        {
+
+        }
+
         public string CifradoSDES(int LlaveDelUsuario, string Contraseña)
         {
             #region VariablesGlobales

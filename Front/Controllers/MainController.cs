@@ -17,7 +17,6 @@ namespace Front.Controllers
 {
     public class MainController : Controller
     {
-
         HttpClient ClienteHttp = new HttpClient();
 
         public ActionResult CrearUsuario()
@@ -27,6 +26,7 @@ namespace Front.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> CrearUsuario(FormCollection collection)
         {
+        string URL = Request.Url.AbsoluteUri;
 
             // TODO: Add insert logic here
             var Nuevo = new Usuario
@@ -362,12 +362,18 @@ namespace Front.Controllers
 
 
                 var lector = new StreamReader(RutaArchivo);
-                var TexoPlano = Singleton.Instance.CifradoSDES(llaveTxt, lector.ReadToEnd());
+                var linea= lector.ReadLine();
+                var cifrado = string.Empty; 
+                while (linea != null)
+                {
+                    cifrado += Singleton.Instance.CifradoSDES(llaveTxt, linea);
+                }
+                
                 var exten = Path.GetExtension(RutaArchivo);
 
                 var exte = new Extesiones
                 {
-                    Texto = TexoPlano,
+                    Texto = cifrado,
                     Extesion = exten
                 };
                 Singleton.Instance.ChatActual.EmisorMen.Add($"{tiempo.Day}|{tiempo.Hour}|{tiempo.Minute}|{tiempo.Second}|{tiempo.Millisecond}", exte);
@@ -484,6 +490,34 @@ namespace Front.Controllers
             Singleton.Instance.Log = false;
 
             return RedirectToAction("Login");
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
+        {
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Cuenta/EliminarUsuario/" + UsuarioAEliminar;
+            var response = await cliente.DeleteAsync(uri);
+            return RedirectToAction("LogOut");
+        }
+
+
+        public async System.Threading.Tasks.Task<ActionResult> ParaMi(string Usuario, string Llave, string Lado)
+        {
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{Usuario}/{Lado}/{Llave}";
+            var response = await cliente.PutAsync(uri, null);
+            return RedirectToAction("ListaDeChats");
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> ParaTodos(string Usuario, string Llave, string Lado)
+        {
+            var array = Usuario.Split(',');
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{array[0]},{array[1]}/{array[0]}/{Llave}";
+            var response = await cliente.PutAsync(uri, null);
+            uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{array[1]},{array[0]}/{array[1]}/{Llave}";
+            response = await cliente.PutAsync(uri, null);
+            return RedirectToAction("ListaDeChats");
         }
     }
 }
