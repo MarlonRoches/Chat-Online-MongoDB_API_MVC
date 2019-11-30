@@ -219,7 +219,7 @@ namespace Back.Controllers
         [HttpDelete]
         public IActionResult DeleteAllMesaje(string user)
         {
-            var modelo = _mensajes.Get(user);
+            var modelo = _mensajes.BuscarEmisor(user);
 
             if (modelo != null)
             {
@@ -227,8 +227,9 @@ namespace Back.Controllers
                 {
 
                     _mensajes.MensajesComoEmisor(modelo.Id);
+                    _mensajes.Remove(modelo.Id);
                     modelo = _mensajes.BuscarEmisor(user);
-
+                    
 
 
                 }

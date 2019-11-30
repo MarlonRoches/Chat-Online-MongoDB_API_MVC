@@ -504,15 +504,19 @@ namespace Front.Controllers
         public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
         {
             var cliente = new HttpClient();
-            var uri = "https://localhost:44313/api/Cuenta/"+ UsuarioAEliminar;
+            var uri = "https://localhost:44313/api/Cuenta/EliminarUsuario/"+ UsuarioAEliminar;
             var response = await cliente.DeleteAsync(uri);
-            return View();
+            return RedirectToAction("LogOut");
         }
 
-        //[HttpPost]
-        //public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
-        //{
-        //}
+
+        public async System.Threading.Tasks.Task<ActionResult> EliminarMensaje(string Usuario, string Llave, string Lado)
+        {
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{Usuario}/{Lado}/{Llave}";
+            var response = await cliente.PutAsync(uri, null);
+            return RedirectToAction("");
+        }
 
     }
 }

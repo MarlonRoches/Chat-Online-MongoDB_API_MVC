@@ -24,7 +24,7 @@
                 @if (Model.EmisorMen.ContainsKey(item.Key) == true && item.Value == true)
                 {
                     <td width="50%">
-                        @Model.EmisorMen[item.Key].Texto
+                        @Html.ActionLink(Model.EmisorMen[item.Key].Texto, "EliminarMensaje", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key,Lado = Model.Receptor }, new {@class = "my-class" })
                     </td>
 
                     <td width="50%" style=" max-height: 50% ">
@@ -39,7 +39,7 @@
 
                     <td width="50%" style=" max-height: 50% ">
 
-                        @Model.ReceptorMen[item.Key].Texto
+                        @Html.ActionLink(Model.ReceptorMen[item.Key].Texto, "EliminarMensaje", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Receptor }, new { @class = "my-class" })
 
                     </td>
 
@@ -99,6 +99,23 @@
         position: fixed;
         left: 50%;
         top: 80%;
+        a .my-class
+
+    {
+        color: #333333
+    }
+
+    a.my-class:active {
+        color: #666666
+    }
+
+    a.my-class:link {
+        color: #999999
+    }
+
+    a.my-class:visited {
+        color: #CCCCCC
+    }
     }
     #Boton {
         position: fixed;
