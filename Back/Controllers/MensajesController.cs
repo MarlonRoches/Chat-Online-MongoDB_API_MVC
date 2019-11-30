@@ -253,6 +253,57 @@ namespace Back.Controllers
         }
 
 
+        [HttpGet]
+        [Route("BuscadorLike/{Emisor}}")]
+        public ActionResult<string> BuscadorLike(string UsuarioCompuesto, string Emisor, [FromBody] Extesiones TextoABuscar)
+        {
+            var Buscador = new Dictionary<string, Extesiones>();
+            var modelo = _mensajes.BuscadorLike(Emisor);
+            string agregar;
+            if (modelo!= null)
+            {
+                foreach(var item in modelo)
+                {
+                    if (item.EmisorMen.ContainsValue(TextoABuscar))
+                    {
+   
+                        foreach (var item2 in item.EmisorMen)
+                        {
+                            agregar = $"{item.Receptor},{item2.Key}";
+                            Buscador.Add(agregar, item2.Value);
+                        }
+                    }
+                    if(item.ReceptorMen.ContainsValue(TextoABuscar))
+                    {
+                        foreach (var item2 in item.ReceptorMen)
+                        {
+                            agregar = $"{item.Receptor},{item2.Key}";
+                            Buscador.Add(agregar, item2.Value);
+                        }
+                    }
+          
+
+                }
+                if (Buscador != null)
+                {
+                    var json = JsonConvert.SerializeObject(Buscador);
+                    return json;
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+
+           
+        }
+
     
 
 
