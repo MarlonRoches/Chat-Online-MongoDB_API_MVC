@@ -141,19 +141,59 @@ namespace Front.Controllers
             return View(Singleton.Instance.Actual);
         }
         [HttpPost]
-        public ActionResult ListaDeChats(string UsuarioABuscar, string EmisorNuevo)
+        public async System.Threading.Tasks.Task<ActionResult> ListaDeChats(string UsuarioABuscar, string EmisorNuevo,string txtLiker, string EmisorLike, string sdeesLike)
         {
 
-
-
-
+            if (UsuarioABuscar != "")
+            {
 
             return RedirectToAction("VerChat", new RouteValueDictionary(new { Controller = "Main", Action = "VerChat", Emisor = EmisorNuevo, ReceptorRecibido = UsuarioABuscar }));
+            }
+            else
+            {
+            txtLiker = Singleton.Instance.CifradoSDES(int.Parse(sdeesLike), txtLiker);
+                var cliente = new HttpClient();
+                var Uri = "https://localhost:44313/api/Mensajes/BuscadorLike/" + EmisorLike;
+                var ext = new Extesiones
+                {
+                    Texto = txtLiker,
+                    Extesion = sdeesLike
+                };
+                var json = JsonConvert.SerializeObject(ext);
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var respo = await cliente.PutAsync(Uri, content);
+
+                var Resultado =JsonConvert.DeserializeObject<Dictionary<string,Extesiones>>( await respo.Content.ReadAsStringAsync());
+                foreach (var item in Resultado.Keys)
+                {
+                    item.Replace("|","/");
+                }
+                Singleton.Instance.DiccionarioResultadoLike = Resultado;
+                return RedirectToAction("ResultadosLike");
+
+            }
+
 
 
 
 
         }
+
+        public ActionResult ResultadosLike()
+        {
+            Singleton.Instance.Resulta.Fechas =Singleton.Instance.DiccionarioResultadoLike.Keys.ToList();
+            Singleton.Instance.Resulta.Mensajes = new List<string>();
+            foreach (var item in Singleton.Instance.DiccionarioResultadoLike.Values)
+            {
+                Singleton.Instance.Resulta.Mensajes.Add(item.Texto);
+            }
+            return View( Singleton.Instance.Resulta);
+        }
+
+
+
+
         public ActionResult Modificar()
         {
             Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES, Singleton.Instance.Actual.Password);

@@ -1,0 +1,27 @@
+﻿@model Back.Models.Like
+
+@{
+    ViewBag.Title = "ResultadosLike";
+}
+
+<h2>ResultadosLike</h2>
+
+<ol>
+    @foreach (var item in Model.Fechas)
+    {
+    <li>
+        @item
+    </li>
+
+    }
+</ol>
+
+<ol>
+    @foreach (var item in Model.Mensajes)
+    {
+        <li>
+            @item
+        </li>
+
+    }
+</ol>

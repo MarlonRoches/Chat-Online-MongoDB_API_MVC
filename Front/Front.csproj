@@ -158,6 +158,9 @@
     <Compile Include="..\Back\Models\Extesiones.cs">
       <Link>Models\Extesiones.cs</Link>
     </Compile>
+    <Compile Include="..\Back\Models\Like.cs">
+      <Link>Models\Like.cs</Link>
+    </Compile>
     <Compile Include="..\Back\Models\Mensaje.cs">
       <Link>Models\Mensaje.cs</Link>
     </Compile>
@@ -261,6 +264,7 @@
     <Content Include="Views\Main\ObtenerChat.cshtml" />
     <Content Include="Views\Main\VerChat.cshtml" />
     <Content Include="Views\Main\Tablas.cshtml" />
+    <Content Include="Views\Main\ResultadosLike.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

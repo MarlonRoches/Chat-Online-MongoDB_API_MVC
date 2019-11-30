@@ -1,10 +1,8 @@
 ﻿@model Back.Models.Mensaje
 
-@{
-    ViewBag.Title = "VerChat";
-}
 
-<h2>@Model.Receptor</h2>
+@Html.ActionLink("<---------- Regresar", "ListaDeChats") | @Html.ActionLink("Cerrar Sesion", "LogOut");
+
 <form method="post">
     <table class="table">
         <tr>
@@ -25,23 +23,19 @@
                 {
                     <td width="50%">
                         @Model.EmisorMen[item.Key].Texto
-                        <p> @Html.ActionLink("Eliminar","ParaMi", new { Usuario = Model.IDEmisorReceptor , Llave = item.Key, Lado = Model.Emisor });</p>
+                        <p> @Html.ActionLink("Eliminar", "ParaMi", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Emisor });</p>
                     </td>
 
-                    <td width="50%" style=" max-height: 50% ">
-
-                    </td>
+                    <td width="50%" style=" max-height: 50% "></td>
                 }
                 else if (Model.ReceptorMen.ContainsKey(item.Key) == true && item.Value == false)
                 {
-                    <td width="50%" style=" max-height: 50% ">
-
-                    </td>
+                    <td width="50%" style=" max-height: 50% "></td>
 
                     <td width="50%" style=" max-height: 50% ">
 
                         @Model.ReceptorMen[item.Key].Texto
-                        <p> @Html.ActionLink("Eliminar","ParaMi", new { Usuario = Model.IDEmisorReceptor , Llave = item.Key, Lado = Model.Receptor });</p>
+                        <p> @Html.ActionLink("Eliminar", "ParaMi", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Receptor });</p>
 
                     </td>
 
@@ -84,10 +78,7 @@
 
 </form>
 
-<h3 style=" color: brown">
-    @Html.ActionLink("Cerrar Sesion", "LogOut");
-    @Html.ActionLink("<---------- Regresar", "ListaDeChats");
-</h3>
+<h3 style=" color: brown"></h3>
 
 <style>
     #txtMensaje {
@@ -96,12 +87,14 @@
         left: 15%;
         top: 80%;
     }
+
     #File {
         width: 800px;
         position: fixed;
         left: 50%;
         top: 80%;
     }
+
     #Boton {
         position: fixed;
         left: 15%;
