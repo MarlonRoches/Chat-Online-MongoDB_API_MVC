@@ -34,8 +34,8 @@ namespace Back.Controllers
             }
         }
         [HttpGet]
-        [Route ("VerificarUsuario/{user}")]
-        public IActionResult VerificarUsuario(string user)
+        [Route ("VerificarUsuario/{user}/{receptor}")]
+        public IActionResult VerificarUsuario(string user, string receptor)
         {
             var modelo = _usuario.Get(user);
             if(modelo == null)
@@ -44,7 +44,14 @@ namespace Back.Controllers
             }
             else
             {
-                return Ok();
+                if (user ==receptor)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return Ok();
+                }
             }
 
         }
