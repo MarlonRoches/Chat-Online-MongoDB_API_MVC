@@ -123,6 +123,20 @@ namespace Back.Controllers
             }
             return NoContent();
         }
+        [HttpGet]
+        [Route("ComprobarConversacion/{UsuarioCompuesto}")]
+        public IActionResult ComprobarConversacion(string UsuarioCompuesto)
+        {
+            var modelo = _mensajes.Get(UsuarioCompuesto);
+            if(modelo != null)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
 
 
