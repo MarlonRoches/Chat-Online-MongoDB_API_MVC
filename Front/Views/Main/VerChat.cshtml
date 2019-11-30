@@ -24,7 +24,14 @@
                 @if (Model.EmisorMen.ContainsKey(item.Key) == true && item.Value == true)
                 {
                     <td width="50%">
-                        @Html.ActionLink(Model.EmisorMen[item.Key].Texto, "EliminarMensaje", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key,Lado = Model.Receptor }, new {@class = "my-class" })
+                       
+                    
+                        @Model.EmisorMen[item.Key].Texto
+
+                        <p style=" color:red">
+
+                        @Html.ActionLink("Eliminar Para Mi", "ParaMi", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Receptor }, new { @class = "my-class" }) |@Html.ActionLink("Eliminar Para Todos", "ParaTodos", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Receptor }, new { @class = "my-class" })
+                        </p> 
                     </td>
 
                     <td width="50%" style=" max-height: 50% ">
@@ -39,7 +46,12 @@
 
                     <td width="50%" style=" max-height: 50% ">
 
-                        @Html.ActionLink(Model.ReceptorMen[item.Key].Texto, "EliminarMensaje", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Receptor }, new { @class = "my-class" })
+                        @Model.ReceptorMen[item.Key].Texto
+
+                        <p style=" color:red">
+
+                        @Html.ActionLink("Eliminar Para Mi", "ParaMi", new { Usuario = Model.IDEmisorReceptor, Llave = item.Key, Lado = Model.Receptor }, new { @class = "my-class" }) 
+                        </p> 
 
                     </td>
 

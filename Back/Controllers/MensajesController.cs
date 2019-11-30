@@ -124,7 +124,7 @@ namespace Back.Controllers
             return NoContent();
         }
         [HttpGet]
-        [Route("ComprobarConversacion/{UsuarioCompuesto}")]
+        [Route("VerificarConversacion/{UsuarioCompuesto}")]
         public IActionResult ComprobarConversacion(string UsuarioCompuesto)
         {
             var modelo = _mensajes.Get(UsuarioCompuesto);

@@ -183,16 +183,23 @@ namespace Front.Controllers
             //verificar usuario
             var uri = "https://localhost:44313/api/Cuenta/VerificarUsuario/" + $"{ReceptorRecibido}/{Emisor}";
             var respose = await cliente.GetAsync(uri);
+            var uri2 = "https://localhost:44313/api/Mensajes/VerificarConversacion/" + $"{Emisor},{ReceptorRecibido}";
+            var respose2 = await cliente.GetAsync(uri2);
 
-            if (respose.ReasonPhrase == "Not Found") //No existe el usuario
+            if (respose.ReasonPhrase == "Not Found" && (respose2.ReasonPhrase == "Not Found")) //No existe el usuario
             {
                 return RedirectToAction("ListaDeChats");
             }
             else
             {
+                //var uri5 = "https://localhost:44313/api/Cuenta/VerificarUsuario/" + $"{ReceptorRecibido}/{Emisor}";
+                //var respose5 = await cliente.GetAsync(uri5);
+                //if (respose5.ReasonPhrase == "Ok")
+                //{ 
                 uri = "https://localhost:44313/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
                 respose = await cliente.GetAsync(uri);
-                if (respose.ReasonPhrase == "OK")
+                respose = await cliente.GetAsync(uri);
+                if (respose.ReasonPhrase == "OK" )
                 {
                     //return conversacion que me devuelve el api
                     var clienteMensaje = new HttpClient();
@@ -238,8 +245,14 @@ namespace Front.Controllers
                     return View(NuevoChat);
 
                 }
-            }
 
+              //  }
+                //else
+                //{
+
+                //}
+
+            }
         }
 
         [HttpPost]
@@ -504,18 +517,29 @@ namespace Front.Controllers
         public async System.Threading.Tasks.Task<ActionResult> EliminarUsuario(string UsuarioAEliminar)
         {
             var cliente = new HttpClient();
-            var uri = "https://localhost:44313/api/Cuenta/EliminarUsuario/"+ UsuarioAEliminar;
+            var uri = "https://localhost:44313/api/Cuenta/EliminarUsuario/" + UsuarioAEliminar;
             var response = await cliente.DeleteAsync(uri);
             return RedirectToAction("LogOut");
         }
 
 
-        public async System.Threading.Tasks.Task<ActionResult> EliminarMensaje(string Usuario, string Llave, string Lado)
+        public async System.Threading.Tasks.Task<ActionResult> ParaMi(string Usuario, string Llave, string Lado)
         {
             var cliente = new HttpClient();
             var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{Usuario}/{Lado}/{Llave}";
             var response = await cliente.PutAsync(uri, null);
-            return RedirectToAction("");
+            return RedirectToAction("ListaDeChats");
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> ParaTodos(string Usuario, string Llave, string Lado)
+        {
+            var array = Usuario.Split(',');
+            var cliente = new HttpClient();
+            var uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{array[0]},{array[1]}/{array[0]}/{Llave}";
+            var response = await cliente.PutAsync(uri, null);
+             uri = "https://localhost:44313/api/Mensajes/BorrarMensaje" + $"/{array[1]},{array[0]}/{array[1]}/{Llave}";
+            response = await cliente.PutAsync(uri, null);
+            return RedirectToAction("ListaDeChats");
         }
 
     }
