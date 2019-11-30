@@ -16,7 +16,7 @@ namespace Front.Controllers
 {
     public class MainController : Controller
     {
-        
+
         HttpClient ClienteHttp = new HttpClient();
 
         public ActionResult CrearUsuario()
@@ -53,7 +53,7 @@ namespace Front.Controllers
             var cliente = new HttpClient();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var respose = await cliente.PostAsync("https://localhost:44338/api/Cuenta/Crear", content);
+            var respose = await cliente.PostAsync("https://localhost:44368/api/Cuenta/Crear", content);
 
 
             return RedirectToAction("Login");
@@ -66,36 +66,36 @@ namespace Front.Controllers
         public async System.Threading.Tasks.Task<ActionResult> Login(FormCollection collection)
         {
             Singleton.Instance.Actual = new Usuario();
-            Singleton.Instance.ChatActual= new Mensaje();
+            Singleton.Instance.ChatActual = new Mensaje();
             Singleton.Instance.UsuarioActual = "";
             string path = Server.MapPath("/");
             //or 
             string path2 = Server.MapPath("~");                // TODO: Add insert logic here
             var Nuevo = new Usuario
-                {
-                    User = collection["User"],
-                    Password = collection["Password"]
-                };
+            {
+                User = collection["User"],
+                Password = collection["Password"]
+            };
             //Cifrar Contraseña
             Singleton.Instance.UsuarioActual = collection["User"];
-                foreach (var item in Nuevo.User)
-                {
-                    Nuevo.LlaveSDES+= (int)item;
-                }
-                if (Nuevo.LlaveSDES < 512)
-                {
-                    Nuevo.LlaveSDES += 512;
-                }
-                Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES,Nuevo.Password);
-                var json = JsonConvert.SerializeObject(Nuevo);
-                var enviar = Nuevo.User+"/"+Nuevo.Password;
+            foreach (var item in Nuevo.User)
+            {
+                Nuevo.LlaveSDES += (int)item;
+            }
+            if (Nuevo.LlaveSDES < 512)
+            {
+                Nuevo.LlaveSDES += 512;
+            }
+            Nuevo.Password = Singleton.Instance.CifradoSDES(Nuevo.LlaveSDES, Nuevo.Password);
+            var json = JsonConvert.SerializeObject(Nuevo);
+            var enviar = Nuevo.User + "/" + Nuevo.Password;
             //Generar Token
             //UsuarioActual= 
             //Verificar Que los campos sean correctos
             var cliente = new HttpClient();
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var uri = "https://localhost:44338/api/Cuenta/Login/" + Nuevo.User;
+            var uri = "https://localhost:44368/api/Cuenta/Login/" + Nuevo.User;
             var respose = await cliente.PostAsync(uri, content);
 
             if (respose.ReasonPhrase == "OK")
@@ -108,22 +108,22 @@ namespace Front.Controllers
                     Contacto = "1"
                 };
                 var GetUsuario = new HttpClient();
-                Singleton.Instance.Actual = JsonConvert.DeserializeObject<Usuario>(await GetUsuario.GetStringAsync("https://localhost:44338/api/Cuenta/GetUsuario/"+ Nuevo.User));
+                Singleton.Instance.Actual = JsonConvert.DeserializeObject<Usuario>(await GetUsuario.GetStringAsync("https://localhost:44368/api/Cuenta/GetUsuario/" + Nuevo.User));
                 //obtenemos Usuario
                 return RedirectToAction("ListaDeChats");
             }
             else if (respose.ReasonPhrase == "Bad Request")
             {
 
-            return View();
+                return View();
             }
             else
             {
                 //not Found
-            return View();
+                return View();
 
             }
-            
+
         }
         public ActionResult ListaDeChats()
         {
@@ -133,8 +133,8 @@ namespace Front.Controllers
             //Clasificar
             //var lista = new List<ListaContactos>();
 
-            
-           
+
+
             //Devolver
 
             return View(Singleton.Instance.Actual);
@@ -155,7 +155,7 @@ namespace Front.Controllers
         }
         public ActionResult Modificar()
         {
-            Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES,Singleton.Instance.Actual.Password);  
+            Singleton.Instance.Actual.Password = Singleton.Instance.DescifradoSDES(Singleton.Instance.Actual.LlaveSDES, Singleton.Instance.Actual.Password);
 
             return View(Singleton.Instance.Actual);
         }
@@ -164,13 +164,13 @@ namespace Front.Controllers
         public async System.Threading.Tasks.Task<ActionResult> Modificar(FormCollection collection)
         {
             Singleton.Instance.Actual.Nombre = collection["Nombre"];
-            Singleton.Instance.Actual.Apellido= collection["Apellido"];
+            Singleton.Instance.Actual.Apellido = collection["Apellido"];
             Singleton.Instance.Actual.Password = Singleton.Instance.CifradoSDES(Singleton.Instance.Actual.LlaveSDES, collection["Password"]);
             Singleton.Instance.Actual.eMail = collection["eMail"];
             var json = JsonConvert.SerializeObject(Singleton.Instance.Actual);
             var cliente = new HttpClient();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var respose = await cliente.PutAsync("https://localhost:44338/api/Cuenta/ModificarUsuario/"+ Singleton.Instance.Actual.User, content);
+            var respose = await cliente.PutAsync("https://localhost:44368/api/Cuenta/ModificarUsuario/" + Singleton.Instance.Actual.User, content);
 
             return RedirectToAction("ListaDeChats");
         }
@@ -180,7 +180,7 @@ namespace Front.Controllers
             var cliente = new HttpClient();
 
             //verificar usuario
-            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{ReceptorRecibido}";
+            var uri = "https://localhost:44368/api/Cuenta/VerificarUsuario/" + $"{ReceptorRecibido}";
             var respose = await cliente.GetAsync(uri);
 
             if (respose.ReasonPhrase == "Not Found") //No existe el usuario
@@ -189,20 +189,20 @@ namespace Front.Controllers
             }
             else
             {
-            uri = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
-            respose = await cliente.GetAsync(uri);
+                uri = "https://localhost:44368/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
+                respose = await cliente.GetAsync(uri);
                 if (respose.ReasonPhrase == "OK")
                 {
                     //return conversacion que me devuelve el api
                     var clienteMensaje = new HttpClient();
-                    var lol = "https://localhost:44338/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
+                    var lol = "https://localhost:44368/api/Mensajes/ObtenerConversacion/" + $"{Emisor},{ReceptorRecibido}";
                     var ChatExistente = await clienteMensaje.GetStringAsync(lol);
                     var enviar = JsonConvert.DeserializeObject<Mensaje>(ChatExistente);
                     Singleton.Instance.ChatActual = enviar;
                     #region Decifrado
-                    uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + ReceptorRecibido;
+                    uri = "https://localhost:44368/api/Cuenta/GetUsuario/" + ReceptorRecibido;
                     var Receptorn = await cliente.GetStringAsync(uri);
-                    uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Emisor;
+                    uri = "https://localhost:44368/api/Cuenta/GetUsuario/" + Emisor;
                     var usuarioEmisor = JsonConvert.DeserializeObject<Usuario>(await cliente.GetStringAsync(uri));
                     var UsuarioReceptor = JsonConvert.DeserializeObject<Usuario>(Receptorn);
                     #endregion
@@ -231,18 +231,18 @@ namespace Front.Controllers
                     var NuevoChat = new Mensaje
                     {
                         Emisor = Emisor,
-                        Receptor= ReceptorRecibido,
+                        Receptor = ReceptorRecibido,
                     };
                     Singleton.Instance.ChatActual = NuevoChat;
-            return View(NuevoChat);
+                    return View(NuevoChat);
 
                 }
             }
-            
+
         }
 
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Recibido, string Emisor ,string recep, string extencion, string ruta)
+        public async System.Threading.Tasks.Task<ActionResult> VerChat(string Recibido, string Emisor, string recep, string extencion, string ruta)
         {
             var devolver = new Mensaje();
             if ((Recibido == "" || Recibido == " "))
@@ -253,9 +253,9 @@ namespace Front.Controllers
             {
                 var cliente = new HttpClient();
 
-                var uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + recep;
+                var uri = "https://localhost:44368/api/Cuenta/GetUsuario/" + recep;
                 var Receptor = await cliente.GetStringAsync(uri);
-                uri = "https://localhost:44338/api/Cuenta/GetUsuario/" + Emisor;
+                uri = "https://localhost:44368/api/Cuenta/GetUsuario/" + Emisor;
                 var usuarioEmisor = JsonConvert.DeserializeObject<Usuario>(await cliente.GetStringAsync(uri));
                 var UsuarioReceptor = JsonConvert.DeserializeObject<Usuario>(Receptor);
 
@@ -297,20 +297,20 @@ namespace Front.Controllers
                 };
                 var json2 = JsonConvert.SerializeObject(EnviarAlRecp);
                 var MensajePalEmisor = new StringContent(json, Encoding.UTF8, "application/json");
-                var Ruta = "https://localhost:44338/api/Mensajes/CrearConversacionEmisor";
+                var Ruta = "https://localhost:44368/api/Mensajes/CrearConversacionEmisor";
                 var MensajeAgregadoEmi = await cliente.PostAsync(Ruta, MensajePalEmisor); var MensajePalReceptor = new StringContent(json2, Encoding.UTF8, "application/json");
-                Ruta = "https://localhost:44338/api/Mensajes/CrearConversacionReceptor";
+                Ruta = "https://localhost:44368/api/Mensajes/CrearConversacionReceptor";
                 var MensajeAgregadoRecep = await cliente.PostAsync(Ruta, MensajePalReceptor);
 
                 var aux = JsonConvert.SerializeObject(Singleton.Instance.ChatActual);
                 var nuevo = JsonConvert.DeserializeObject<Mensaje>(aux);
                 devolver = DecifrarDiccionario(llaveTxt, nuevo);
-                
+
 
 
             }
             return View(devolver);
-                }
+        }
         public ActionResult NuevoChat()
         {
 
@@ -323,7 +323,7 @@ namespace Front.Controllers
             var cliente = new HttpClient();
 
 
-            var uri = "https://localhost:44338/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
+            var uri = "https://localhost:44368/api/Cuenta/VerificarUsuario/" + $"{Receptor}";
             var respose = await cliente.GetAsync(uri);
 
             return View();
@@ -350,13 +350,13 @@ namespace Front.Controllers
             return devolver;
         }
 
-        public async System.Threading.Tasks.Task<ActionResult> EliminarChat( string Emisor,string ReceptorRecibido)
+        public async System.Threading.Tasks.Task<ActionResult> EliminarChat(string Emisor, string ReceptorRecibido)
         {
             var cliente = new HttpClient();
             var json = JsonConvert.SerializeObject(new Usuario());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var uri = "https://localhost:44338/api/Cuenta/Eliminarcontacto/" + Emisor +$"/{Emisor},{ReceptorRecibido}";
-            var summit = await cliente.PutAsync(uri,content);
+            var uri = "https://localhost:44368/api/Cuenta/Eliminarcontacto/" + Emisor + $"/{Emisor},{ReceptorRecibido}";
+            var summit = await cliente.PutAsync(uri, content);
             return Redirect("ListaDeChats");
         }
 
@@ -365,8 +365,8 @@ namespace Front.Controllers
             Singleton.Instance.Actual = new Usuario();
             Singleton.Instance.ChatActual = new Mensaje();
             Singleton.Instance.UsuarioActual = string.Empty;
-            Singleton.Instance.Log= false;
-            
+            Singleton.Instance.Log = false;
+
             return RedirectToAction("Login");
         }
     }
