@@ -254,7 +254,7 @@ namespace Back.Controllers
 
 
         [HttpGet]
-        [Route("BuscadorLike/{Emisor}}")]
+        [Route("BuscadorLike/{Emisor}")]
         public ActionResult<string> BuscadorLike(string UsuarioCompuesto, string Emisor, [FromBody] Extesiones TextoABuscar)
         {
             var Buscador = new Dictionary<string, Extesiones>();
